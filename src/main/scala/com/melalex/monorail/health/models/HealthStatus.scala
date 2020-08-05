@@ -1,4 +1,4 @@
-package com.melalex.monorail.health
+package com.melalex.monorail.health.models
 
 object HealthStatus extends Enumeration {
   type HealthStatus = Value
