@@ -3,7 +3,7 @@ version := "0.1"
 scalaVersion := "2.13.3"
 
 // Dependencies versions
-val akkaHttpVersion = "10.1.2"
+val akkaHttpVersion = "10.1.12"
 val akkaVersion = "2.6.8"
 val scalaTestVersion = "3.2.0"
 
