@@ -1,9 +1,9 @@
 package com.melalex.monorail.health.services.sensors
 
+import akka.dispatch.Futures
 import com.melalex.monorail.health.models.SubSystemHealth
 
 import scala.concurrent.Future
-import scala.concurrent.Promise._
 
 object MonorailSensor {
 
@@ -12,5 +12,5 @@ object MonorailSensor {
 
 class MonorailSensor extends Sensor {
 
-  override def checkHealth: Future[SubSystemHealth] = successful(SubSystemHealth.ok(MonorailSensor.SensorName)).future
+  override def checkHealth: Future[SubSystemHealth] = Futures.successful(SubSystemHealth.ok(MonorailSensor.SensorName))
 }
