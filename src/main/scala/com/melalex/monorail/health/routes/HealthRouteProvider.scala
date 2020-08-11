@@ -14,7 +14,7 @@ class HealthRouteProvider(val healthService: HealthService)(implicit val executi
 
   override def provideRoute: Route = path("health") {
     get {
-      complete(healthService.checkHealth.map(_.asJson))
+      complete(healthService.checkHealth.map(v => v.asJson.noSpaces))
     }
   }
 }

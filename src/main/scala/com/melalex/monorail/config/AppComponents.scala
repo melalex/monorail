@@ -17,5 +17,5 @@ trait AppComponents extends HealthComponents {
   val config: Config = ConfigLoader.load
 
   // Properties
-  val serverProperties: ServerProperties = wireWith(ServerProperties.create)
+  val serverProperties: ServerProperties = wireWith(ServerProperties.create _)
 }
