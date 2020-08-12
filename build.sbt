@@ -2,8 +2,6 @@ name := "monorail"
 version := "0.1"
 scalaVersion := "2.13.3"
 
-enablePlugins(AkkaGrpcPlugin)
-
 libraryDependencies ++= {
 
   // Dependencies versions
@@ -13,6 +11,7 @@ libraryDependencies ++= {
   val scalaTestVersion = "3.2.0"
   val macWireVersion = "2.3.7"
   val circeVersion = "0.13.0"
+  val logbackVersion = "1.2.3"
 
   Seq(
     // Akka
@@ -33,8 +32,7 @@ libraryDependencies ++= {
     "de.heikoseeberger" %% "akka-http-circe" % akkaJsonVersion,
 
     // Other
-    "io.bfil" %% "automapper" % "0.7.0",
-    "ch.qos.logback" % "logback-classic" % "1.2.3",
+    "ch.qos.logback" % "logback-classic" % logbackVersion,
 
     // Test
     "org.scalatest" %% "scalatest" % scalaTestVersion % Test,

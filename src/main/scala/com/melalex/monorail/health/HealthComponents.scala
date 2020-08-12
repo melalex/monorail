@@ -1,12 +1,12 @@
 package com.melalex.monorail.health
 
-import com.melalex.monorail.config.AkkaComponents
 import com.melalex.monorail.health.mappers.{HealthCheckResultMapper, SubSystemHealthMapper}
 import com.melalex.monorail.health.routes.HealthRouteProvider
 import com.melalex.monorail.health.services.HealthService
 import com.melalex.monorail.health.services.impl.SensorBackedHealthService
 import com.melalex.monorail.health.services.sensors.{MonorailSensor, Sensor}
 import com.melalex.monorail.support.RouteProvider
+import com.melalex.monorail.support.components.AkkaComponents
 import com.softwaremill.macwire.{wire, wireSet}
 
 trait HealthComponents extends AkkaComponents {
@@ -22,6 +22,6 @@ trait HealthComponents extends AkkaComponents {
   // Services
   lazy val healthService: HealthService = wire[SensorBackedHealthService]
 
-  // Controllers
+  // Routes
   lazy val healthRouteProvider: RouteProvider = wire[HealthRouteProvider]
 }

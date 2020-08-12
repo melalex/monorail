@@ -1,4 +1,4 @@
-package com.melalex.monorail.config
+package com.melalex.monorail.support.components
 
 import akka.actor.ActorSystem
 

@@ -1,8 +1,8 @@
-package com.melalex.monorail.config
+package com.melalex.monorail.support.components
 
-import com.melalex.monorail.config.properties.ServerProperties
 import com.melalex.monorail.health.HealthComponents
-import com.melalex.monorail.support.{CompositeRouteProvider, RouteProvider}
+import com.melalex.monorail.support.properties.ServerProperties
+import com.melalex.monorail.support.{CompositeRouteProvider, ConfigLoader, RouteProvider}
 import com.softwaremill.macwire.{wire, wireSet, wireWith}
 import com.typesafe.config.Config
 

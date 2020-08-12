@@ -1,4 +1,4 @@
-package com.melalex.monorail.config.properties
+package com.melalex.monorail.support.properties
 
 import com.typesafe.config.Config
 
