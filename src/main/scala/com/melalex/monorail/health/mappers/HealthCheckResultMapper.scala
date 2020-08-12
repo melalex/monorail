@@ -7,5 +7,5 @@ import com.melalex.monorail.support.CustomMapper
 class HealthCheckResultMapper(val subSystemHealthMapper: SubSystemHealthMapper) extends CustomMapper[HealthCheckResult, HealthCheckResultDto] {
 
   override def map(source: HealthCheckResult): HealthCheckResultDto =
-    HealthCheckResultDto(source.subSystems.map(subSystemHealthMapper.map))
+    HealthCheckResultDto(source.isOk, source.subSystems.map(subSystemHealthMapper.map))
 }

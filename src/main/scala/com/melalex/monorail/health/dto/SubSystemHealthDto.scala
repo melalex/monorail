@@ -1,18 +1,10 @@
 package com.melalex.monorail.health.dto
 
-sealed trait SubSystemHealthDto {
+object SubSystemHealthDto {
 
-  def name: String
+  def ok(name: String): SubSystemHealthDto = SubSystemHealthDto(name, "OK", None)
 
-  def status: String
+  def ko(name: String, reason: String): SubSystemHealthDto = SubSystemHealthDto(name, "KO", Some(reason))
 }
 
-case class HealthySubSystemDto(name: String) extends SubSystemHealthDto {
-
-  val status: String = "OK"
-}
-
-case class UnHealthySubSystemDto(name: String, reason: String) extends SubSystemHealthDto {
-
-  val status: String = "KO"
-}
+case class SubSystemHealthDto(name: String, status: String, reason: Option[String])
