@@ -19,6 +19,8 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
     "com.typesafe.akka" %% "akka-stream" % akkaVersion,
     "com.typesafe.akka" %% "akka-pki" % akkaVersion,
+    "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
+    "com.typesafe.akka" %% "akka-discovery" % akkaVersion,
     "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
 
     // DI
@@ -29,6 +31,10 @@ libraryDependencies ++= {
     "io.circe" %% "circe-generic" % circeVersion,
     "io.circe" %% "circe-parser" % circeVersion,
     "de.heikoseeberger" %% "akka-http-circe" % akkaJsonVersion,
+
+    // Other
+    "io.bfil" %% "automapper" % "0.7.0",
+    "ch.qos.logback" % "logback-classic" % "1.2.3",
 
     // Test
     "org.scalatest" %% "scalatest" % scalaTestVersion % Test,

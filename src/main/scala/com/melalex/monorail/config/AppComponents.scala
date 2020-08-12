@@ -2,20 +2,19 @@ package com.melalex.monorail.config
 
 import com.melalex.monorail.config.properties.ServerProperties
 import com.melalex.monorail.health.HealthComponents
-import com.melalex.monorail.support.RouteProvider
-import com.melalex.monorail.support.impl.CompositeRouterProvider
+import com.melalex.monorail.support.{CompositeRouteProvider, RouteProvider}
 import com.softwaremill.macwire.{wire, wireSet, wireWith}
 import com.typesafe.config.Config
 
 trait AppComponents extends HealthComponents {
 
   // Routes
-  lazy val healthRouteProviders: Set[RouteProvider] = wireSet[RouteProvider]
-  lazy val compositeRouterProvider: RouteProvider = wire[CompositeRouterProvider]
+  lazy val routeProviders: Set[RouteProvider] = wireSet[RouteProvider]
+  lazy val compositeRouteProvider: CompositeRouteProvider = wire[CompositeRouteProvider]
 
   // Config
-  val config: Config = ConfigLoader.load
+  lazy val config: Config = ConfigLoader.load
 
   // Properties
-  val serverProperties: ServerProperties = wireWith(ServerProperties.create _)
+  lazy val serverProperties: ServerProperties = wireWith(ServerProperties.create _)
 }
