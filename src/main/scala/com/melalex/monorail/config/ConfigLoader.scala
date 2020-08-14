@@ -1,4 +1,4 @@
-package com.melalex.monorail.support
+package com.melalex.monorail.config
 
 import com.typesafe.config.{Config, ConfigFactory}
 
