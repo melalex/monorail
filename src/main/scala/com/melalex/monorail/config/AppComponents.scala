@@ -11,7 +11,7 @@ import com.typesafe.config.Config
 trait AppComponents extends HealthComponents {
 
   // Routes
-  lazy val routeProviders: Set[RouteProvider] = wireSet[RouteProvider]
+  lazy val routeProviders: Set[RouteProvider]             = wireSet[RouteProvider]
   lazy val compositeRouteProvider: CompositeRouteProvider = wire[CompositeRouteProvider]
 
   lazy val routes: Route = pathPrefix("api" / "v1") {

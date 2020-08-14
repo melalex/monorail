@@ -11,11 +11,17 @@ import io.circe.syntax._
 
 import scala.concurrent.ExecutionContext
 
-class HealthRouteProvider(val healthService: HealthService, val healthCheckResultMapper: HealthCheckResultMapper)(implicit val executionContext: ExecutionContext) extends RouteProvider with FailFastCirceSupport {
+class HealthRouteProvider(
+    val healthService: HealthService,
+    val healthCheckResultMapper: HealthCheckResultMapper
+)(implicit val executionContext: ExecutionContext)
+    extends RouteProvider
+    with FailFastCirceSupport {
 
-  override def provideRoute: Route = path("health") {
-    get {
-      complete(healthService.checkHealth.map(healthCheckResultMapper.map).map(_.asJson))
+  override def provideRoute: Route =
+    path("health") {
+      get {
+        complete(healthService.checkHealth.map(healthCheckResultMapper.map).map(_.asJson))
+      }
     }
-  }
 }

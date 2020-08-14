@@ -9,12 +9,19 @@ import com.melalex.monorail.health.services.sensors.Sensor
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
 
-class SensorBackedHealthService(val sensors: Set[Sensor])(implicit val executionContext: ExecutionContext, implicit val system: ActorSystem) extends HealthService {
+class SensorBackedHealthService(val sensors: Set[Sensor])(
+    implicit val executionContext: ExecutionContext,
+    implicit val system: ActorSystem
+) extends HealthService {
 
   private val log = Logging(system, classOf[SensorBackedHealthService])
 
   override def checkHealth: Future[HealthCheckResult] =
-    Future.sequence(sensors.map(_.checkHealth))
+    Future
+      .sequence(sensors.map(_.checkHealth))
       .map(HealthCheckResult)
-      .andThen { case Success(value) if value.isNotOk => log.warning("Received unhealthy check response: {}", value) }
+      .andThen {
+        case Success(value) if value.isNotOk =>
+          log.warning("Received unhealthy check response: {}", value)
+      }
 }

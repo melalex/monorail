@@ -13,11 +13,11 @@ trait HealthComponents extends AkkaComponents {
 
   // Sensors
   lazy val monorailSensor: Sensor = wire[MonorailSensor]
-  lazy val sensors: Set[Sensor] = wireSet[Sensor]
+  lazy val sensors: Set[Sensor]   = wireSet[Sensor]
 
   // Mappers
   lazy val healthCheckResultMapper: HealthCheckResultMapper = wire[HealthCheckResultMapper]
-  lazy val subSystemHealthMapper: SubSystemHealthMapper = wire[SubSystemHealthMapper]
+  lazy val subSystemHealthMapper: SubSystemHealthMapper     = wire[SubSystemHealthMapper]
 
   // Services
   lazy val healthService: HealthService = wire[SensorBackedHealthService]

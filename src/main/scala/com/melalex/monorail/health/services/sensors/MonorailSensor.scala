@@ -12,5 +12,6 @@ object MonorailSensor {
 
 class MonorailSensor extends Sensor {
 
-  override def checkHealth: Future[SubSystemHealth] = Futures.successful(SubSystemHealth.ok(MonorailSensor.SensorName))
+  override def checkHealth: Future[SubSystemHealth] =
+    Futures.successful(SubSystemHealth.ok(MonorailSensor.SensorName))
 }
