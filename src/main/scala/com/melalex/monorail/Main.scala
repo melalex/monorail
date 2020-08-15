@@ -10,7 +10,8 @@ import scala.util.{Failure, Success}
 object Main extends App with AppComponents {
 
   Http()
-    .bindAndHandle(routes, serverProperties.host, serverProperties.port)
+    .newServerAt(serverProperties.host, serverProperties.port)
+    .bindFlow(routes)
     .onComplete {
       case Success(binding) =>
         system.log.info("Bound: {}", binding)

@@ -2,11 +2,6 @@ name := "monorail"
 version := "0.1"
 scalaVersion := "2.13.3"
 
-scalacOptions ++= List(
-  "-Yrangepos",
-  "-Ywarn-unused"
-)
-
 scalafixScalaBinaryVersion := "2.13.3"
 
 scalafmtOnCompile := true
@@ -17,9 +12,9 @@ addCompilerPlugin(scalafixSemanticdb)
 libraryDependencies ++= {
 
   // Dependencies versions
-  val akkaHttpVersion  = "10.1.12"
+  val akkaHttpVersion  = "10.2.0"
   val akkaVersion      = "2.6.8"
-  val akkaJsonVersion  = "1.31.0"
+  val akkaJsonVersion  = "1.34.0"
   val scalaTestVersion = "3.2.0"
   val macWireVersion   = "2.3.7"
   val circeVersion     = "0.13.0"
