@@ -4,9 +4,9 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.melalex.monorail.config.properties.ServerProperties
 import com.melalex.monorail.health.HealthComponents
-import com.melalex.monorail.support.{CompositeRouteProvider, RouteProvider}
-import com.softwaremill.macwire.{wire, wireSet, wireWith}
-import com.typesafe.config.Config
+import com.melalex.monorail.util.{CompositeRouteProvider, RouteProvider}
+import com.softwaremill.macwire.{wire, wireSet}
+import pureconfig.generic.auto._
 
 trait AppComponents extends HealthComponents {
 
@@ -18,9 +18,8 @@ trait AppComponents extends HealthComponents {
     compositeRouteProvider.provideRoute
   }
 
-  // Config
-  lazy val config: Config = ConfigLoader.load
-
   // Properties
-  lazy val serverProperties: ServerProperties = wireWith(ServerProperties.create _)
+  lazy val serverProperties: ServerProperties = config
+    .at("monorail.server.http")
+    .loadOrThrow[ServerProperties]
 }

@@ -12,13 +12,14 @@ addCompilerPlugin(scalafixSemanticdb)
 libraryDependencies ++= {
 
   // Dependencies versions
-  val akkaHttpVersion  = "10.2.0"
-  val akkaVersion      = "2.6.8"
-  val akkaJsonVersion  = "1.34.0"
-  val scalaTestVersion = "3.2.0"
-  val macWireVersion   = "2.3.7"
-  val circeVersion     = "0.13.0"
-  val logbackVersion   = "1.2.3"
+  val akkaHttpVersion   = "10.2.0"
+  val akkaVersion       = "2.6.8"
+  val akkaJsonVersion   = "1.34.0"
+  val scalaTestVersion  = "3.2.0"
+  val macWireVersion    = "2.3.7"
+  val circeVersion      = "0.13.0"
+  val logbackVersion    = "1.2.3"
+  val pureConfigVersion = "0.13.0"
 
   Seq(
     // Akka
@@ -36,7 +37,8 @@ libraryDependencies ++= {
     "io.circe"          %% "circe-parser"    % circeVersion,
     "de.heikoseeberger" %% "akka-http-circe" % akkaJsonVersion,
     // Other
-    "ch.qos.logback" % "logback-classic" % logbackVersion,
+    "ch.qos.logback"        % "logback-classic" % logbackVersion,
+    "com.github.pureconfig" %% "pureconfig"     % pureConfigVersion,
     // Test
     "org.scalatest"     %% "scalatest"                % scalaTestVersion % Test,
     "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion      % Test,

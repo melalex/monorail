@@ -1,4 +1,4 @@
-package com.melalex.monorail.support
+package com.melalex.monorail.util
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
