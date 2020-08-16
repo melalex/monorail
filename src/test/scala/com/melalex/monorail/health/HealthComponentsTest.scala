@@ -1,6 +1,20 @@
 package com.melalex.monorail.health
 
-import org.scalatest.GivenWhenThen
-import org.scalatest.featurespec.AnyFeatureSpec
+import akka.http.scaladsl.testkit.ScalatestRouteTest
+import com.melalex.monorail.BaseRouteSpec
+import com.melalex.monorail.config.AppComponents
+import com.sun.tools.javac.jvm.Gen
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class HealthComponentsTest extends AnyFeatureSpec with GivenWhenThen with HealthComponents {}
+class HealthComponentsTest extends BaseRouteSpec with AppComponents {
+
+  "/health endpoint" should {
+
+    "return OK response" in {
+      Get("/api/v1/health") ~> routes ~> check {
+
+      }
+    }
+  }
+}
