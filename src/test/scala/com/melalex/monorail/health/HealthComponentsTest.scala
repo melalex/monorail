@@ -1,20 +1,17 @@
 package com.melalex.monorail.health
 
-import akka.http.scaladsl.testkit.ScalatestRouteTest
 import com.melalex.monorail.BaseRouteSpec
 import com.melalex.monorail.config.AppComponents
-import com.sun.tools.javac.jvm.Gen
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
+import com.melalex.monorail.fixtures.HealthCheckResults
+import com.melalex.monorail.health.dto.HealthCheckResultDto
+import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
+import io.circe.generic.auto._
 
-class HealthComponentsTest extends BaseRouteSpec with AppComponents {
+class HealthComponentsTest extends BaseRouteSpec with AppComponents with FailFastCirceSupport {
 
-  "/health endpoint" should {
-
-    "return OK response" in {
-      Get("/api/v1/health") ~> routes ~> check {
-
-      }
+  "/health endpoint" should "respond with OK" in new HealthCheckResults.Dto {
+    Get("/api/v1/health") ~> routes ~> check {
+      responseAs[HealthCheckResultDto] shouldEqual healthyDto()
     }
   }
 }
