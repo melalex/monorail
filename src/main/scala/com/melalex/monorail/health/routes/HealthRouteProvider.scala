@@ -13,9 +13,9 @@ import scala.concurrent.ExecutionContext
 
 class HealthRouteProvider(
     val healthService: HealthService,
-    val healthCheckResultMapper: HealthCheckResultMapper
-)(implicit val executionContext: ExecutionContext)
-    extends RouteProvider
+    val healthCheckResultMapper: HealthCheckResultMapper,
+    implicit val executionContext: ExecutionContext
+) extends RouteProvider
     with FailFastCirceSupport {
 
   override def provideRoute: Route =

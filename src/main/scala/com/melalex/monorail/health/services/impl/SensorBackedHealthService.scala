@@ -9,7 +9,8 @@ import com.melalex.monorail.health.services.sensors.Sensor
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
 
-class SensorBackedHealthService(val sensors: Set[Sensor])(
+class SensorBackedHealthService(
+    val sensors: Set[Sensor],
     implicit val executionContext: ExecutionContext,
     implicit val system: ActorSystem
 ) extends HealthService {

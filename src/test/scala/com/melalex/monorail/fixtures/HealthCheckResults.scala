@@ -18,7 +18,8 @@ object HealthCheckResults {
 
   trait Dto {
 
-    def healthyDto(): HealthCheckResultDto = HealthCheckResultDto(healthy = true, Set())
+    def healthyDto(): HealthCheckResultDto =
+      HealthCheckResultDto(healthy = true, Set(healthyMonorailDto()))
 
     def healthyMonorailDto(): SubSystemHealthDto =
       SubSystemHealthDto(monorailSensorName, okResult, Option.empty)

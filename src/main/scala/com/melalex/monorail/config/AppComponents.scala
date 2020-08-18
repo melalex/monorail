@@ -7,7 +7,7 @@ import com.melalex.monorail.health.HealthComponents
 import com.melalex.monorail.util.{CompositeRouteProvider, RouteProvider}
 import com.softwaremill.macwire.{wire, wireSet}
 
-trait AppComponents extends HealthComponents {
+trait AppComponents extends PureConfigComponents with HealthComponents {
 
   lazy val routes: Route = pathPrefix("api" / "v1") {
     compositeRouteProvider.provideRoute

@@ -1,13 +1,13 @@
 package com.melalex.monorail
 
 import akka.http.scaladsl.Http
-import com.melalex.monorail.config.AppComponents
+import com.melalex.monorail.config.{AkkaComponents, AppComponents}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 
-object Main extends App with AppComponents {
+object Main extends App with AppComponents with AkkaComponents {
 
   Http()
     .newServerAt(serverProperties.host, serverProperties.port)
