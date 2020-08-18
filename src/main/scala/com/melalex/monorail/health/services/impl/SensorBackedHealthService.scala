@@ -1,6 +1,5 @@
 package com.melalex.monorail.health.services.impl
 
-import akka.actor.ActorSystem
 import com.melalex.monorail.health.models.HealthCheckResult
 import com.melalex.monorail.health.services.HealthService
 import com.melalex.monorail.health.services.sensors.Sensor
@@ -11,7 +10,6 @@ import scala.util.Success
 
 class SensorBackedHealthService(
     private val sensors: Set[Sensor],
-    private val system: ActorSystem,
     private implicit val executionContext: ExecutionContext,
 ) extends HealthService {
 

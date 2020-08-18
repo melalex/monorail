@@ -3,25 +3,29 @@ package com.melalex.monorail.fixtures
 import com.melalex.monorail.health.dto.{HealthCheckResultDto, SubSystemHealthDto}
 import com.melalex.monorail.health.models.{HealthCheckResult, HealthCheckStatus, SubSystemHealth}
 
-object HealthCheckResults {
+trait HealthCheckFixture {
 
   private val monorailSensorName = "MONORAIL"
   private val okResult           = "OK"
 
-  trait Model {
+  def model: Model = new Model
 
-    def healthyModel(): HealthCheckResult = HealthCheckResult(Set(healthyMonorailModel()))
+  def dto: Dto = new Dto
 
-    def healthyMonorailModel(): SubSystemHealth =
+  class Model {
+
+    def healthy(): HealthCheckResult = HealthCheckResult(Set(healthyMonorail()))
+
+    def healthyMonorail(): SubSystemHealth =
       SubSystemHealth(monorailSensorName, HealthCheckStatus.Ok)
   }
 
-  trait Dto {
+  class Dto {
 
-    def healthyDto(): HealthCheckResultDto =
-      HealthCheckResultDto(healthy = true, Set(healthyMonorailDto()))
+    def healthy(): HealthCheckResultDto =
+      HealthCheckResultDto(healthy = true, Set(healthyMonorail()))
 
-    def healthyMonorailDto(): SubSystemHealthDto =
+    def healthyMonorail(): SubSystemHealthDto =
       SubSystemHealthDto(monorailSensorName, okResult, Option.empty)
   }
 }
