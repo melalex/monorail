@@ -1,21 +1,21 @@
 package com.melalex.monorail.health.services.impl
 
 import akka.actor.ActorSystem
-import akka.event.Logging
 import com.melalex.monorail.health.models.HealthCheckResult
 import com.melalex.monorail.health.services.HealthService
 import com.melalex.monorail.health.services.sensors.Sensor
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
 
 class SensorBackedHealthService(
-    val sensors: Set[Sensor],
-    implicit val executionContext: ExecutionContext,
-    implicit val system: ActorSystem
+    private val sensors: Set[Sensor],
+    private val system: ActorSystem,
+    private implicit val executionContext: ExecutionContext,
 ) extends HealthService {
 
-  private val log = Logging(system, classOf[SensorBackedHealthService])
+  private val log = LoggerFactory.getLogger(classOf[SensorBackedHealthService])
 
   override def checkHealth: Future[HealthCheckResult] =
     Future
@@ -23,6 +23,6 @@ class SensorBackedHealthService(
       .map(HealthCheckResult)
       .andThen {
         case Success(value) if value.isNotOk =>
-          log.warning("Received unhealthy check response: {}", value)
+          log.warn("Received unhealthy check response: {}", value)
       }
 }
