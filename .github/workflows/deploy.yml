@@ -1,0 +1,12 @@
+name: Deploy
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Hello deploy"
