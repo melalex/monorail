@@ -10,7 +10,7 @@ import scala.util.Success
 
 class SensorBackedHealthService(
     private val sensors: Set[Sensor],
-    private implicit val executionContext: ExecutionContext,
+    private implicit val executionContext: ExecutionContext
 ) extends HealthService {
 
   private val log = LoggerFactory.getLogger(classOf[SensorBackedHealthService])

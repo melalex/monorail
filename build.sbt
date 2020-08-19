@@ -6,6 +6,7 @@ scalafixScalaBinaryVersion := "2.13.3"
 
 scalafmtOnCompile := true
 scalafixOnCompile := true
+coverageEnabled := true
 
 addCompilerPlugin(scalafixSemanticdb)
 
