@@ -31,6 +31,9 @@ class SensorBackedHealthServiceTest extends BaseUnitTestSpec {
 
     whenReady(sensorBackedHealthService.checkHealth) { result =>
       result shouldEqual HealthCheckResult(Set(health1, health2, health3))
+
+      result.isOk should be(false)
+      result.isNotOk should be(true)
     }
   }
 }

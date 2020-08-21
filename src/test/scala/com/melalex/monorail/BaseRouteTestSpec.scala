@@ -6,4 +6,4 @@ import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-trait BaseRouteTestSpec extends AnyFlatSpec with Matchers with ScalatestRouteTest with AppComponents with FailFastCirceSupport {}
+trait BaseRouteTestSpec extends AnyFlatSpec with Matchers with ScalatestRouteTest with AppComponents with FailFastCirceSupport
