@@ -4,7 +4,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
+
       - uses: olafurpg/setup-scala@v5
         with:
           java-version: openjdk@1.14
@@ -23,5 +26,13 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
 
-      - name: Check for scalafmt conformance
-        uses: openlawteam/scalafmt-ci@v2
+      - name: Format scala source files
+        run: |
+          sbt scalafmt
+          sbt scalafix
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_user_name: Linter
+          commit_message: Apply linting changes
+          push_options: --force
