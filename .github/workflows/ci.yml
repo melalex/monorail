@@ -8,7 +8,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
 
-      - uses: olafurpg/setup-scala@v5
+      - uses: olafurpg/setup-scala@v6
         with:
           java-version: openjdk@1.14
 
