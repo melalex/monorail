@@ -2,7 +2,24 @@ name: Deploy prod
 on: push
 jobs:
   build:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
-      - name: Hellow actions
-        run: echo 'Hellow actions'
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
+
+      - uses: olafurpg/setup-scala@v6
+        with:
+          java-version: openjdk@1.14
+
+      - name: Cache SBT
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
+
+      - name: Run tests
+        run: sbt clean coverage test coverageReport

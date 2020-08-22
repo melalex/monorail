@@ -1,8 +1,0 @@
-name: Deploy stage
-on: push
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Hellow actions
-        run: echo 'Hellow actions'
