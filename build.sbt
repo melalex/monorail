@@ -1,5 +1,7 @@
+import ReleaseTransformations._
+
 name := "monorail"
-version := "0.1"
+version := "0.0.1"
 scalaVersion := "2.13.3"
 
 scalafixScalaBinaryVersion := "2.13.3"
@@ -9,6 +11,19 @@ scalafixOnCompile := true
 coverageEnabled := true
 
 addCompilerPlugin(scalafixSemanticdb)
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  setNextVersion,
+  commitNextVersion,
+  pushChanges
+)
 
 libraryDependencies ++= {
 
