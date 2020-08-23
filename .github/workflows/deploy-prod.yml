@@ -6,6 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
+
       - uses: olafurpg/setup-scala@v6
         with:
           java-version: openjdk@1.14
@@ -20,5 +23,7 @@ jobs:
 
       - name: Build, test and dockerize
         run: |
+          git config user.email "alexander.melashchenko@gmail.com"
+          git config user.name "GitHub Actions"
           echo "GITHUB_TOKEN" | docker login docker.pkg.github.com -u melalex --password-stdin
           sbt 'release with-defaults'
