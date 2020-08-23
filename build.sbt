@@ -1,7 +1,6 @@
 import ReleaseTransformations._
 
 name := "monorail"
-version := "0.0.1"
 scalaVersion := "2.13.3"
 
 scalafixScalaBinaryVersion := "2.13.3"
@@ -10,20 +9,13 @@ scalafmtOnCompile := true
 scalafixOnCompile := true
 coverageEnabled := true
 
-addCompilerPlugin(scalafixSemanticdb)
+dockerExposedPorts := List(8080)
+dockerRepository := Some("docker.pkg.github.com")
+dockerUsername := Some("melalex")
+dockerUpdateLatest := true
 
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  runTest,
-  setReleaseVersion,
-  commitReleaseVersion,
-  tagRelease,
-  setNextVersion,
-  commitNextVersion,
-  pushChanges
-)
+addCompilerPlugin(scalafixSemanticdb)
+enablePlugins(JavaAppPackaging, DockerPlugin)
 
 libraryDependencies ++= {
 
@@ -64,3 +56,17 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-stream-testkit"      % akkaVersion      % Test
   )
 }
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  ReleaseStep(releaseStepTask(publish in Docker)),
+  setNextVersion,
+  commitNextVersion,
+  pushChanges
+)

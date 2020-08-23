@@ -21,5 +21,7 @@ jobs:
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
 
-      - name: Run tests
-        run: sbt clean coverage test coverageReport
+      - name: Build, test and dockerize
+        run: |
+          echo "GITHUB_TOKEN" | docker login docker.pkg.github.com -u melalex --password-stdin
+          sbt release

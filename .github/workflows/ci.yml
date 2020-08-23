@@ -6,9 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.PAT }}
-
       - uses: olafurpg/setup-scala@v6
         with:
           java-version: openjdk@1.14
@@ -36,4 +33,3 @@ jobs:
         with:
           commit_user_name: CI bot
           commit_message: "[skip ci] Apply linting changes"
-          push_options: --force
