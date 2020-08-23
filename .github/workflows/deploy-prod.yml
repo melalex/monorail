@@ -25,5 +25,5 @@ jobs:
         run: |
           git config user.email "alexander.melashchenko@gmail.com"
           git config user.name "GitHub Actions"
-          echo "${{ GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u melalex --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u melalex --password-stdin
           sbt 'release with-defaults'
