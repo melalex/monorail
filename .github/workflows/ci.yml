@@ -24,12 +24,8 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
 
-      - name: Format scala source files
-        run: |
-          sbt scalafmt
-          sbt scalafix
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_user_name: CI bot
           commit_message: "[skip ci] Apply linting changes"

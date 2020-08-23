@@ -21,4 +21,4 @@ jobs:
       - name: Build, test and dockerize
         run: |
           echo "GITHUB_TOKEN" | docker login docker.pkg.github.com -u melalex --password-stdin
-          sbt release with-defaults
+          sbt 'release with-defaults'
