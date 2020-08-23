@@ -1,4 +1,7 @@
 import ReleaseTransformations._
+import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
+
+import scala.Seq
 
 name := "monorail"
 scalaVersion := "2.13.3"
@@ -7,12 +10,16 @@ scalafixScalaBinaryVersion := "2.13.3"
 
 scalafmtOnCompile := true
 scalafixOnCompile := true
-coverageEnabled := true
 
+dockerBaseImage := "adoptopenjdk/openjdk14:jre-14.0.2_12-alpine"
 dockerExposedPorts := List(8080)
 dockerRepository := Some("docker.pkg.github.com")
 dockerUsername := Some("melalex")
+dockerAlias := DockerAlias(dockerRepository.value, dockerUsername.value, s"${name.value}/api", Some(version.value))
 dockerUpdateLatest := true
+dockerCommands ++= Seq(Cmd("USER", "root"), ExecCmd("RUN", "apk", "add", "--no-cache", "bash"))
+
+releaseCommitMessage := s"[skip ci] Setting version to ${(version in ThisBuild).value}"
 
 addCompilerPlugin(scalafixSemanticdb)
 enablePlugins(JavaAppPackaging, DockerPlugin)
