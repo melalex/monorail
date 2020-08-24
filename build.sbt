@@ -1,7 +1,5 @@
-import ReleaseTransformations._
 import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
-
-import scala.Seq
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 name := "monorail"
 scalaVersion := "2.13.3"
@@ -15,9 +13,9 @@ dockerBaseImage := "adoptopenjdk/openjdk14:jre-14.0.2_12-alpine"
 dockerExposedPorts := List(8080)
 dockerRepository := Some("docker.pkg.github.com")
 dockerUsername := Some("melalex")
-dockerAlias := DockerAlias(dockerRepository.value, dockerUsername.value, s"${name.value}/api", Some(version.value))
+dockerAlias := DockerAlias(dockerRepository.value, dockerUsername.value, s"${name.value}/monorail-api", Some(version.value))
 dockerUpdateLatest := true
-dockerCommands ++= Seq(Cmd("USER", "root"), ExecCmd("RUN", "apk", "add", "--no-cache", "bash"))
+dockerCommands ++= List(Cmd("USER", "root"), ExecCmd("RUN", "apk", "add", "--no-cache", "bash"))
 
 releaseCommitMessage := s"[skip ci] Setting version to ${(version in ThisBuild).value}"
 
@@ -37,7 +35,7 @@ libraryDependencies ++= {
   val scalaTestVersion  = "3.2.1"
   val scalaMockVersion  = "5.0.0"
 
-  Seq(
+  List(
     // Akka
     "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
     "com.typesafe.akka" %% "akka-stream"      % akkaVersion,
@@ -64,7 +62,7 @@ libraryDependencies ++= {
   )
 }
 
-releaseProcess := Seq[ReleaseStep](
+releaseProcess := List[ReleaseStep](
   checkSnapshotDependencies,
   inquireVersions,
   runClean,

@@ -1,5 +1,8 @@
 name: Deploy prod
-on: push
+on:
+  push:
+    branches:
+      - 'master'
 jobs:
   build:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
@@ -21,9 +24,21 @@ jobs:
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
 
-      - name: Build, test and dockerize
+      - name: Run tests
+        run: sbt clean coverage test coverageReport
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+
+      - name: Increment version, tag, build an artifact and push it to GitHub package registry
         run: |
           git config user.email "alexander.melashchenko@gmail.com"
           git config user.name "GitHub Actions"
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u melalex --password-stdin
-          sbt 'release with-defaults'
+          sbt 'release skip-tests with-defaults'
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create release
