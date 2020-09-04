@@ -1,6 +1,8 @@
 import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
+lazy val generateChangelog = taskKey[Unit]("Generates CHANGELOG.md file based on git log")
+
 name := "monorail"
 scalaVersion := "2.13.3"
 
@@ -79,3 +81,5 @@ releaseProcess := List[ReleaseStep](
   commitNextVersion,
   pushChanges
 )
+
+generateChangelog := {}
