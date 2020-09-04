@@ -17,7 +17,11 @@ dockerAlias := DockerAlias(dockerRepository.value, dockerUsername.value, s"${nam
 dockerUpdateLatest := true
 dockerCommands ++= List(Cmd("USER", "root"), ExecCmd("RUN", "apk", "add", "--no-cache", "bash"))
 
-releaseCommitMessage := s"[skip ci] Setting version to ${(version in ThisBuild).value}"
+releaseCommitMessage := s"[skip ci] set version to ${(version in ThisBuild).value}"
+
+majorRegexes := List("BREAKING CHANGE".r)
+minorRegexes := List("^feat\\(?.*\\)?!?: .*".r)
+bugfixRegexes := List("^fix\\(?.*\\)?!?: .*".r, "^refactor\\(?.*\\)?!?: .*".r)
 
 addCompilerPlugin(scalafixSemanticdb)
 enablePlugins(JavaAppPackaging, DockerPlugin)

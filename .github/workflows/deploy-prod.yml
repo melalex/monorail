@@ -31,14 +31,27 @@ jobs:
         uses: codecov/codecov-action@v1
 
       - name: Increment version, tag, build an artifact and push it to GitHub package registry
+        id: sbt-release
+        outputs:
+          tag:
+            description: 'Latest tag'
         run: |
           git config user.email "alexander.melashchenko@gmail.com"
           git config user.name "GitHub Actions"
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u melalex --password-stdin
           sbt 'release skip-tests with-defaults'
+          echo "::set-output name=latest-tag::$(git describe --abbrev=0)"
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create release
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ steps.sbt-release.outputs.tag }}
+          release_name: Release ${{ steps.sbt-release.outputs.tag }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
