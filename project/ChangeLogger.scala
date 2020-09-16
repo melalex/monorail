@@ -1,8 +1,58 @@
+import java.time.LocalDate
+
+import org.fusesource.scalate._
+
+import scala.util.matching.Regex
+
 object ChangeLogger {
 
-  type IO = () => _
+  val TemplateLocation: String = "CHANGELOG.md.ssp"
 
-  def writeChangelog(): IO = () => {
-    print("")
+  val BreakingChangeRegEx: Regex = "BREAKING CHANGE|!" r
+  val FeatureRegEx: Regex        = "^feat\\(?.*\\)?!?: .*" r
+  val FixRegEx: Regex            = "^fix\\(?.*\\)?!?: .*" r
+  val RefactoringRegEx: Regex    = "^refactor\\(?.*\\)?!?: .*" r
+
+  private val PrefixRegEx = "^(feat|fix|refactor)\\(?.*\\)?!?:" r
+
+  private val engine = new TemplateEngine
+
+  def generateChangeLogString(version: String, date: LocalDate, commitMsgs: Seq[String]): String = {
+    val commits = commitMsgs
+      .map(mapToCommit)
+      .groupBy(_ commitType)
+
+    val parameters = Map(
+      "version" -> version,
+      "date"    -> date,
+      "added"   -> commits(CommitType.Feature),
+      "fixed"   -> commits(CommitType.Fix),
+      "changed" -> commits(CommitType.Refactoring)
+    )
+
+    engine.layout(TemplateLocation, parameters)
+  }
+
+  private def mapToCommit(commitMsg: String): Commit = Commit(
+    commitMsg,
+    PrefixRegEx.replaceAllIn(commitMsg, ""),
+    getCommitType(commitMsg)
+  )
+
+  private def getCommitType(commitMsg: String): CommitType.CommitType = commitMsg match {
+    case FeatureRegEx     => CommitType.Feature
+    case FixRegEx         => CommitType.Fix
+    case RefactoringRegEx => CommitType.Refactoring
+  }
+
+  private case class Commit(
+      fullMessage: String,
+      tittle: String,
+      commitType: CommitType.CommitType
+  )
+
+  private object CommitType extends Enumeration {
+    type CommitType = Value
+    val Feature, Fix, Refactoring = Value
   }
 }

@@ -1,3 +1,5 @@
+import java.time.LocalDate
+
 import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
@@ -21,9 +23,9 @@ dockerCommands ++= List(Cmd("USER", "root"), ExecCmd("RUN", "apk", "add", "--no-
 
 releaseCommitMessage := s"[skip ci] set version to ${(version in ThisBuild).value}"
 
-majorRegexes := List("BREAKING CHANGE".r)
-minorRegexes := List("^feat\\(?.*\\)?!?: .*".r)
-bugfixRegexes := List("^fix\\(?.*\\)?!?: .*".r, "^refactor\\(?.*\\)?!?: .*".r)
+majorRegexes := List(ChangeLogger.BreakingChangeRegEx)
+minorRegexes := List(ChangeLogger.FeatureRegEx)
+bugfixRegexes := List(ChangeLogger.FixRegEx, ChangeLogger.RefactoringRegEx)
 
 addCompilerPlugin(scalafixSemanticdb)
 enablePlugins(JavaAppPackaging, DockerPlugin)
@@ -74,6 +76,7 @@ releaseProcess := List[ReleaseStep](
   runClean,
   runTest,
   setReleaseVersion,
+  ReleaseStep(releaseStepTask(generateChangelog)),
   commitReleaseVersion,
   tagRelease,
   ReleaseStep(releaseStepTask(publish in Docker)),
@@ -82,4 +85,10 @@ releaseProcess := List[ReleaseStep](
   pushChanges
 )
 
-generateChangelog := {}
+generateChangelog := {
+  val messages  = unreleasedCommits.value.map(_.msg)
+  val changeLog = ChangeLogger.generateChangeLogString(version.value, LocalDate.now(), messages)
+  val file      = (Compile / resourceManaged).value / "CHANGELOG.md"
+
+  IO.write(file, changeLog)
+}
