@@ -2,7 +2,7 @@ import java.time.LocalDate
 
 import org.fusesource.scalate._
 
-import scala.util.matching.Regex
+import scala.util.matching._
 
 object ChangeLogger {
 
@@ -40,9 +40,10 @@ object ChangeLogger {
   )
 
   private def getCommitType(commitMsg: String): CommitType.CommitType = commitMsg match {
-    case FeatureRegEx     => CommitType.Feature
-    case FixRegEx         => CommitType.Fix
-    case RefactoringRegEx => CommitType.Refactoring
+    case FeatureRegEx(_*)     => CommitType.Feature
+    case FixRegEx(_*)         => CommitType.Fix
+    case RefactoringRegEx(_*) => CommitType.Refactoring
+    case _                    => CommitType.Unknown
   }
 
   private case class Commit(
@@ -53,6 +54,6 @@ object ChangeLogger {
 
   private object CommitType extends Enumeration {
     type CommitType = Value
-    val Feature, Fix, Refactoring = Value
+    val Feature, Fix, Refactoring, Unknown = Value
   }
 }
