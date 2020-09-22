@@ -21,6 +21,7 @@ object ChangeLogger {
     val commits = commitMsgs
       .map(mapToCommit)
       .groupBy(_ commitType)
+      .withDefaultValue(Seq())
 
     val parameters = Map(
       "version" -> version,
