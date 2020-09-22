@@ -4,12 +4,12 @@
 <%@ val version: String %>
 <%@ val date: LocalDate %>
 
-<%@ val added: List[String] = List() %>
-<%@ val changed: List[String] = List() %>
-<%@ val deprecated: List[String] = List() %>
-<%@ val removed: List[String] = List() %>
-<%@ val fixed: List[String] = List() %>
-<%@ val security: List[String] = List() %>
+<%@ val added: Seq[String] = Seq() %>
+<%@ val changed: Seq[String] = Seq() %>
+<%@ val deprecated: Seq[String] = Seq() %>
+<%@ val removed: Seq[String] = Seq() %>
+<%@ val fixed: Seq[String] = Seq() %>
+<%@ val security: Seq[String] = Seq() %>
 
 <% val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd") %>
 
