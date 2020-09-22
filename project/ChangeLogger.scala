@@ -6,8 +6,6 @@ import scala.util.matching._
 
 object ChangeLogger {
 
-  val TemplateLocation: String = "CHANGELOG.md.ssp"
-
   val BreakingChangeRegEx: Regex = "BREAKING CHANGE|!" r
   val FeatureRegEx: Regex        = "^feat\\(?.*\\)?!?: .*" r
   val FixRegEx: Regex            = "^fix\\(?.*\\)?!?: .*" r
@@ -17,7 +15,7 @@ object ChangeLogger {
 
   private val engine = new TemplateEngine
 
-  def generateChangeLogString(version: String, date: LocalDate, commitMsgs: Seq[String]): String = {
+  def generateChangelogString(template: String, version: String, date: LocalDate, commitMsgs: Seq[String]): String = {
     val commits = commitMsgs
       .map(mapToCommit)
       .groupBy(_ commitType)
@@ -31,7 +29,7 @@ object ChangeLogger {
       "changed" -> commits(CommitType.Refactoring)
     )
 
-    engine.layout(TemplateLocation, parameters)
+    engine.layout(template, parameters)
   }
 
   private def mapToCommit(commitMsg: String): Commit = Commit(

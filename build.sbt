@@ -3,7 +3,9 @@ import java.time.LocalDate
 import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-lazy val generateChangelog = taskKey[Unit]("Generates CHANGELOG.md file based on git log")
+lazy val changelogTemplatePath    = settingKey[String]("Path to CHANGELOG.md template")
+lazy val changelogDestinationPath = settingKey[String]("Path to CHANGELOG.md destination")
+lazy val changelogGenerate        = taskKey[Unit]("Generates CHANGELOG.md file based on git log")
 
 name := "monorail"
 scalaVersion := "2.13.3"
@@ -26,6 +28,9 @@ releaseCommitMessage := s"[skip ci] set version to ${(version in ThisBuild).valu
 majorRegexes := List(ChangeLogger.BreakingChangeRegEx)
 minorRegexes := List(ChangeLogger.FeatureRegEx)
 bugfixRegexes := List(ChangeLogger.FixRegEx, ChangeLogger.RefactoringRegEx)
+
+changelogTemplatePath := "project/CHANGELOG.md.ssp"
+changelogDestinationPath := "target/changelog/CHANGELOG.md"
 
 addCompilerPlugin(scalafixSemanticdb)
 enablePlugins(JavaAppPackaging, DockerPlugin)
@@ -76,7 +81,7 @@ releaseProcess := List[ReleaseStep](
   runClean,
   runTest,
   setReleaseVersion,
-  ReleaseStep(releaseStepTask(generateChangelog))
+  ReleaseStep(releaseStepTask(changelogGenerate))
 //  ,
 //  commitReleaseVersion,
 //  tagRelease,
@@ -86,10 +91,13 @@ releaseProcess := List[ReleaseStep](
 //  pushChanges
 )
 
-generateChangelog := {
-  val messages  = unreleasedCommits.value.map(_.msg)
-  val changeLog = ChangeLogger.generateChangeLogString(version.value, LocalDate.now(), messages)
-  val file      = (Compile / resourceManaged).value / "CHANGELOG.md"
+changelogGenerate := {
+  val changelog = ChangeLogger.generateChangelogString(
+    changelogTemplatePath.value,
+    version.value,
+    LocalDate.now(),
+    unreleasedCommits.value.map(_.msg)
+  )
 
-  IO.write(file, changeLog)
+  IO.write(new File(changelogDestinationPath.value), changelog)
 }
