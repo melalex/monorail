@@ -1,5 +1,5 @@
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{Path, Paths}
 import java.time.LocalDate
 
 import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
@@ -83,14 +83,13 @@ releaseProcess := List[ReleaseStep](
   runClean,
   runTest,
   setReleaseVersion,
-  ReleaseStep(releaseStepTask(changelogGenerate))
-//  ,
-//  commitReleaseVersion,
-//  tagRelease,
-//  ReleaseStep(releaseStepTask(publish in Docker)),
-//  setNextVersion,
-//  commitNextVersion,
-//  pushChanges
+  ReleaseStep(releaseStepTask(changelogGenerate)),
+  commitReleaseVersion,
+  tagRelease,
+  ReleaseStep(releaseStepTask(publish in Docker)),
+  setNextVersion,
+  commitNextVersion,
+  pushChanges
 )
 
 changelogGenerate := {
@@ -101,5 +100,5 @@ changelogGenerate := {
     unreleasedCommits.value.map(_.msg)
   )
 
-  Files.write(Paths.get("file.txt"), changelog.getBytes(StandardCharsets.UTF_8))
+  IO.write(changelogDestinationPath.value.toFile, changelog.getBytes(StandardCharsets.UTF_8))
 }
