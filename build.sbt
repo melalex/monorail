@@ -76,13 +76,14 @@ releaseProcess := List[ReleaseStep](
   runClean,
   runTest,
   setReleaseVersion,
-  ReleaseStep(releaseStepTask(generateChangelog)),
-  commitReleaseVersion,
-  tagRelease,
-  ReleaseStep(releaseStepTask(publish in Docker)),
-  setNextVersion,
-  commitNextVersion,
-  pushChanges
+  ReleaseStep(releaseStepTask(generateChangelog))
+//  ,
+//  commitReleaseVersion,
+//  tagRelease,
+//  ReleaseStep(releaseStepTask(publish in Docker)),
+//  setNextVersion,
+//  commitNextVersion,
+//  pushChanges
 )
 
 generateChangelog := {
