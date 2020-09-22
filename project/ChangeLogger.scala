@@ -19,6 +19,7 @@ object ChangeLogger {
     val commits = commitMsgs
       .map(mapToCommit)
       .groupBy(_ commitType)
+      .mapValues(msgs => msgs.map(_ tittle))
       .withDefaultValue(Seq())
 
     val parameters = Map(
@@ -34,9 +35,12 @@ object ChangeLogger {
 
   private def mapToCommit(commitMsg: String): Commit = Commit(
     commitMsg,
-    PrefixRegEx.replaceAllIn(commitMsg, ""),
+    getTittle(commitMsg),
     getCommitType(commitMsg)
   )
+
+  private def getTittle(commitMsg: String) =
+    PrefixRegEx.replaceAllIn(commitMsg.takeWhile(_ != '\n'), "")
 
   private def getCommitType(commitMsg: String): CommitType.CommitType = commitMsg match {
     case FeatureRegEx(_*)     => CommitType.Feature
