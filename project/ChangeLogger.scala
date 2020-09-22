@@ -1,3 +1,4 @@
+import java.nio.file.Path
 import java.time.LocalDate
 
 import org.fusesource.scalate._
@@ -15,7 +16,7 @@ object ChangeLogger {
 
   private val engine = new TemplateEngine
 
-  def generateChangelogString(template: String, version: String, date: LocalDate, commitMsgs: Seq[String]): String = {
+  def generateChangelogString(template: Path, version: String, date: LocalDate, commitMsgs: Seq[String]): String = {
     val commits = commitMsgs
       .map(mapToCommit)
       .groupBy(_ commitType)
@@ -30,7 +31,7 @@ object ChangeLogger {
       "changed" -> commits(CommitType.Refactoring)
     )
 
-    engine.layout(template, parameters)
+    engine.layout(template.toString, parameters)
   }
 
   private def mapToCommit(commitMsg: String): Commit = Commit(

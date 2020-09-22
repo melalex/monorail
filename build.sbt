@@ -1,10 +1,12 @@
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, Path, Paths}
 import java.time.LocalDate
 
 import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-lazy val changelogTemplatePath    = settingKey[String]("Path to CHANGELOG.md template")
-lazy val changelogDestinationPath = settingKey[String]("Path to CHANGELOG.md destination")
+lazy val changelogTemplatePath    = settingKey[Path]("Path to CHANGELOG.md template")
+lazy val changelogDestinationPath = settingKey[Path]("Path to CHANGELOG.md destination")
 lazy val changelogGenerate        = taskKey[Unit]("Generates CHANGELOG.md file based on git log")
 
 name := "monorail"
@@ -29,8 +31,8 @@ majorRegexes := List(ChangeLogger.BreakingChangeRegEx)
 minorRegexes := List(ChangeLogger.FeatureRegEx)
 bugfixRegexes := List(ChangeLogger.FixRegEx, ChangeLogger.RefactoringRegEx)
 
-changelogTemplatePath := "project/CHANGELOG.md.ssp"
-changelogDestinationPath := "target/changelog/CHANGELOG.md"
+changelogTemplatePath := Paths.get("project/CHANGELOG.md.ssp")
+changelogDestinationPath := Paths.get("target/changelog/CHANGELOG.md")
 
 addCompilerPlugin(scalafixSemanticdb)
 enablePlugins(JavaAppPackaging, DockerPlugin)
@@ -99,7 +101,5 @@ changelogGenerate := {
     unreleasedCommits.value.map(_.msg)
   )
 
-  print(changelog)
-
-  IO.write(new File(changelogDestinationPath.value), changelog)
+  Files.write(Paths.get("file.txt"), changelog.getBytes(StandardCharsets.UTF_8))
 }
