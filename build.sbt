@@ -99,5 +99,7 @@ changelogGenerate := {
     unreleasedCommits.value.map(_.msg)
   )
 
+  print(changelog)
+
   IO.write(new File(changelogDestinationPath.value), changelog)
 }
