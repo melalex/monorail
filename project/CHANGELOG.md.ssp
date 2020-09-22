@@ -11,9 +11,9 @@
 <%@ val fixed: Seq[String] = Seq() %>
 <%@ val security: Seq[String] = Seq() %>
 
-<% val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd") %>
+<% val dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE %>
 
-## ${version}(${date.format(dateTimeFormatter)}})
+## ${version} (${date.format(dateTimeFormatter)}})
 
 #if (added.nonEmpty)
     ### Added
