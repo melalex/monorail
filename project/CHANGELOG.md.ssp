@@ -1,58 +1,49 @@
+<%-- @formatter:off --%>
 #import(java.time.LocalDate)
 #import(java.time.format.DateTimeFormatter)
-
 <%@ val version: String %>
 <%@ val date: LocalDate %>
-
 <%@ val added: Seq[String] = Seq() %>
 <%@ val changed: Seq[String] = Seq() %>
 <%@ val deprecated: Seq[String] = Seq() %>
 <%@ val removed: Seq[String] = Seq() %>
 <%@ val fixed: Seq[String] = Seq() %>
 <%@ val security: Seq[String] = Seq() %>
-
 <% val dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE %>
-
-## ${version} (${date.format(dateTimeFormatter)}})
-
+## ${version} (${date.format(dateTimeFormatter)})
 #if (added.nonEmpty)
-    ### Added
-    #for (item <- added)
-        * ${item}
-    #end
+### Added
+#for (item <- added)
+* ${item}
 #end
-
+#end
 #if (changed.nonEmpty)
-    ### Changed
-    #for (item <- changed)
-        * ${item}
-    #end
+### Changed
+#for (item <- changed)
+* ${item}
 #end
-
+#end
 #if (deprecated.nonEmpty)
-    ### Deprecated
-    #for (item <- deprecated)
-        * ${item}
-    #end
+### Deprecated
+#for (item <- deprecated)
+* ${item}
 #end
-
+#end
 #if (removed.nonEmpty)
-    ### Removed
-    #for (item <- removed)
-        * ${item}
-    #end
+### Removed
+#for (item <- removed)
+* ${item}
 #end
-
+#end
 #if (fixed.nonEmpty)
-    ### Fixed
-    #for (item <- fixed)
-        * ${item}
-    #end
+### Fixed
+#for (item <- fixed)
+* ${item}
 #end
-
+#end
 #if (security.nonEmpty)
-    ### Security
-    #for (item <- security)
-        * ${item}
-    #end
+### Security
+#for (item <- security)
+* ${item}
+#end
 #end
