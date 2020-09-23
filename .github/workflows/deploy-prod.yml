@@ -49,9 +49,6 @@ jobs:
         with:
           tag_name: ${{ steps.sbt-release.outputs.tag }}
           release_name: Release ${{ steps.sbt-release.outputs.tag }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+          body_path: target/changelog/CHANGELOG.md
           draft: false
           prerelease: false
