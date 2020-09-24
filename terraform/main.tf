@@ -8,29 +8,17 @@ terraform {
 provider "google" {
   project = "main-290415"
   region = "us-east1"
+  zone = "us-east1-b"
 }
-
-data "google_compute_zones" "this" {}
 
 resource "google_compute_instance" "this" {
   name = "monorail-app"
-  machine_type = "n1-standard-1"
-  zone = google_compute_zones.this.names[0]
-
-  tags = [
-    "foo",
-    "bar"
-  ]
+  machine_type = "f1-micro"
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-9"
+      image = "ubuntu-os-cloud/ubuntu-minimal-2004-lts"
     }
-  }
-
-  // Local SSD disk
-  scratch_disk {
-    interface = "SCSI"
   }
 
   network_interface {
@@ -39,18 +27,5 @@ resource "google_compute_instance" "this" {
     access_config {
       // Ephemeral IP
     }
-  }
-
-  metadata = {
-    foo = "bar"
-  }
-
-  metadata_startup_script = "echo hi > /test.txt"
-
-  service_account {
-    scopes = [
-      "userinfo-email",
-      "compute-ro",
-      "storage-ro"]
   }
 }
