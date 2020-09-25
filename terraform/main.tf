@@ -6,14 +6,31 @@ terraform {
 }
 
 provider "google" {
-  project = "main-290415"
-  region = "us-east1"
-  zone = "us-east1-b"
+  project = var.project
+  region = var.region
+  zone = var.zone
+  credentials = file(var.credentials_file_path)
+}
+
+locals {
+  network_name = "default"
+  app_name = "monorail"
+  app_origin = "terraform"
 }
 
 resource "google_compute_instance" "this" {
-  name = "monorail-app"
+  name = "${local.app_name}-app"
   machine_type = "f1-micro"
+
+  metadata = {
+    ssh-keys = "${var.compute_instance_username}:${tls_private_key.this.public_key_openssh}"
+  }
+
+  labels = {
+    app = local.app_name
+    owner = var.app_owner
+    origin = local.app_origin
+  }
 
   boot_disk {
     initialize_params {
@@ -22,10 +39,27 @@ resource "google_compute_instance" "this" {
   }
 
   network_interface {
-    network = "default"
+    network = local.network_name
 
     access_config {
-      // Ephemeral IP
+      // Include this section to give the VM an external ip address
     }
+  }
+}
+
+resource "tls_private_key" "this" {
+  algorithm = "RSA"
+  rsa_bits = 4096
+}
+
+resource "google_compute_firewall" "this" {
+  name = "${google_compute_instance.this.name}-firewall"
+  network = local.network_name
+
+  allow {
+    protocol = "tcp"
+    ports = [
+      "8080"
+    ]
   }
 }
