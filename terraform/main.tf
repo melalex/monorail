@@ -6,7 +6,6 @@ terraform {
 }
 
 provider "google" {
-  project = var.project
   region = var.region
   zone = var.zone
   credentials = file(var.credentials_file_path)
@@ -21,6 +20,7 @@ locals {
 resource "google_compute_instance" "this" {
   name = "${local.app_name}-app"
   machine_type = "f1-micro"
+  project = var.project
 
   metadata = {
     ssh-keys = "${var.compute_instance_username}:${tls_private_key.this.public_key_openssh}"
@@ -62,6 +62,7 @@ resource "tls_private_key" "this" {
 resource "google_compute_firewall" "this" {
   name = "${google_compute_instance.this.name}-firewall"
   network = local.network_name
+  project = var.project
 
   allow {
     protocol = "tcp"
