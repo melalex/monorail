@@ -47,6 +47,13 @@ resource "google_compute_instance" "this" {
   }
 }
 
+resource "google_project_service" "firestore" {
+  project = var.project
+  service = "firestore.googleapis.com"
+
+  disable_dependent_services = true
+}
+
 resource "tls_private_key" "this" {
   algorithm = "RSA"
   rsa_bits = 4096
