@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
-    bucket = "monorail-ops"
-    prefix = "terraform/state"
+    bucket = "melalex-terraform-admin"
+    prefix = "state/monorail"
   }
 }
 
@@ -45,6 +45,10 @@ resource "google_compute_instance" "this" {
       // Include this section to give the VM an external ip address
     }
   }
+
+  depends_on = [
+    google_project_service.firestore
+  ]
 }
 
 resource "google_project_service" "firestore" {
