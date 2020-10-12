@@ -174,4 +174,4 @@ override.tf.json
 
 # Custom
 terraform/terraform.tfvars
-./.ssh
+.ssh

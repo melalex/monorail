@@ -5,7 +5,7 @@ variable "compute_instance_username" {
 }
 
 variable "project" {
-  default = "main-290415"
+  default = "admin-291014"
 }
 
 variable "app_owner" {
