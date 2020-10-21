@@ -1,0 +1,8 @@
+- src: https://github.com/geerlingguy/ansible-role-java
+  name: ansible-role-java
+
+- src: https://github.com/geerlingguy/ansible-role-docker
+  name: ansible-role-docker
+
+- src: https://github.com/lrk/ansible-role-flyway
+  name: ansible-role-flyway

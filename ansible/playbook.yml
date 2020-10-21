@@ -1,0 +1,71 @@
+- name: Install dependencies
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: Run ansible galaxy
+      command: ansible-galaxy install -r requirements.yml
+      register: galaxy_result
+      changed_when: '"was installed successfully" in galaxy_result.stdout'
+
+- name: Execute Flyway migration
+  hosts: migration
+  vars:
+    fw_version: 6.0.1
+  tasks:
+    - name: Install python3-lxml
+      become: true
+      apt:
+        name: python3-lxml
+        update_cache: yes
+
+    - block:
+        - name: Install Java 14
+          include_role:
+            name: ansible-role-java
+          vars:
+            java_packages:
+              - openjdk-14-jre
+      become: true
+
+    - block:
+        - name: Install flyway
+          include_role:
+            name: ansible-role-flyway
+          vars:
+            flyway_version: '{{ fw_version }}'
+            flyway_url: 'jdbc:mysql://{{ db_host }}:{{ db_port }}/{{ db_name }}'
+            flyway_user: '{{ db_user }}'
+            flyway_password: '{{ db_password }}'
+            flyway_connect_retries: 10
+            flyway_schemas:
+              - '{{ db_name }}'
+      become: true
+
+    - name: Copy migrations to remote
+      become: true
+      copy:
+        src: '{{ item }}'
+        dest: '/opt/flyway/flyway-{{ fw_version }}/sql'
+      with_fileglob:
+        - '{{ migrations_folder }}/*'
+
+
+    - name: Migrates the database
+      shell: flyway migrate
+
+- name: Docker
+  hosts: app
+  tasks:
+    - block:
+        - name: Install Docker
+          include_role:
+            name: ansible-role-docker
+          vars:
+            docker_install_compose: false
+            docker_users:
+              - '{{ ansible_ssh_user }}'
+      become: true
+
+    - name: Run app
+      become: true
+      shell: 'docker start app || docker run --name app -d -p 8080:8080 moleksyuk/demo --spring.datasource.url=jdbc:mysql://{{ db_host }}:{{ db_port }}/{{ db_name }} --spring.datasource.username={{ db_user }} --spring.datasource.password={{ db_password }}'

@@ -49,6 +49,21 @@ resource "google_compute_instance" "this" {
   depends_on = [
     google_project_service.firestore
   ]
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'Up and running'"]
+
+    connection {
+      type = "ssh"
+      user = var.compute_instance_username
+      private_key = local_file.private_key.filename
+    }
+  }
+
+  provisioner "local-exec" {
+    command = "ansible-playbook -i '${google_compute_instance.this.network_interface.0.access_config.0.nat_ip},' --private-key ${local_file.private_key.filename} ../ansible/playbook.yml"
+  }
 }
 
 resource "google_project_service" "firestore" {
@@ -56,11 +71,6 @@ resource "google_project_service" "firestore" {
   service = "firestore.googleapis.com"
 
   disable_dependent_services = true
-}
-
-resource "tls_private_key" "this" {
-  algorithm = "RSA"
-  rsa_bits = 4096
 }
 
 resource "google_compute_firewall" "this" {
@@ -74,4 +84,19 @@ resource "google_compute_firewall" "this" {
       "8080"
     ]
   }
+}
+
+resource "tls_private_key" "this" {
+  algorithm = "RSA"
+  rsa_bits = 4096
+}
+
+resource "local_file" "private_key" {
+  content = tls_private_key.this.private_key_pem
+  filename = "${var.ssh_keys_folder}/id_rsa"
+}
+
+resource "local_file" "public_key" {
+  content = tls_private_key.this.public_key_pem
+  filename = "${var.ssh_keys_folder}/id_rsa.pub"
 }

@@ -19,3 +19,7 @@ variable "region" {
 variable "zone" {
   default = "us-east1-b"
 }
+
+variable "ssh_keys_folder" {
+  default = ".ssh"
+}
