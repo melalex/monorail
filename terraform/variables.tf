@@ -23,3 +23,11 @@ variable "zone" {
 variable "ssh_keys_folder" {
   default = ".ssh"
 }
+
+variable "ansible_playbook_location" {
+  default = "../ansible/playbook.yml"
+}
+
+variable "app_version" {
+  default = "latest"
+}

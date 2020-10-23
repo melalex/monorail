@@ -52,7 +52,8 @@ resource "google_compute_instance" "this" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'Up and running'"]
+      "echo 'Up and running'"
+    ]
 
     connection {
       type = "ssh"
@@ -60,9 +61,26 @@ resource "google_compute_instance" "this" {
       private_key = local_file.private_key.filename
     }
   }
+}
+
+resource "null_resource" "this" {
+  depends_on = [
+    google_compute_instance.this
+  ]
+
+  triggers = {
+    always_run = timestamp()
+  }
 
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${google_compute_instance.this.network_interface.0.access_config.0.nat_ip},' --private-key ${local_file.private_key.filename} ../ansible/playbook.yml"
+    command = <<EOT
+      ansible-playbook \
+        -i '${google_compute_instance.this.network_interface.0.access_config.0.nat_ip},' \
+        --private-key ${local_file.private_key.filename} \
+        ${var.ansible_playbook_location} \
+        -u ${var.compute_instance_username} \
+        --extra-vars 'monorail_version=${var.app_version}'
+    EOT
   }
 }
 
