@@ -8,6 +8,7 @@
       changed_when: '"was installed successfully" in galaxy_result.stdout'
 
 - name: Docker
+  hosts: all
   tasks:
     - block:
         - name: Install Docker
@@ -19,11 +20,11 @@
               - '{{ ansible_ssh_user }}'
       become: true
 
-- name: Restart a container
-  community.general.docker_container:
-    name: myapplication
-    image: docker.pkg.github.com/melalex/monorail/api:{{ monorail_version }}
-    state: started
-    restart: yes
-    ports:
-      - "8080:8080"
+    - name: Restart a container
+      community.general.docker_container:
+        name: monorail-api
+        image: docker.pkg.github.com/melalex/monorail/api:{{ monorail_version }}
+        state: started
+        restart: yes
+        ports:
+          - "8080:8080"

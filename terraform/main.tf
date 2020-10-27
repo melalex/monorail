@@ -62,6 +62,10 @@ resource "google_compute_instance" "this" {
       private_key = local_file.private_key.filename
     }
   }
+
+  provisioner "local-exec" {
+    command = "ssh-keyscan -H ${google_compute_instance.this.network_interface.0.access_config.0.nat_ip} >> ~/.ssh/known_hosts"
+  }
 }
 
 resource "null_resource" "this" {
@@ -75,10 +79,11 @@ resource "null_resource" "this" {
 
   provisioner "local-exec" {
     command = <<EOT
+      ansible-galaxy install -r ${var.ansible_playbook_location}/requirements.yml
       ansible-playbook \
         -i '${google_compute_instance.this.network_interface.0.access_config.0.nat_ip},' \
         --private-key ${local_file.private_key.filename} \
-        ${var.ansible_playbook_location} \
+        ${var.ansible_playbook_location}/playbook.yml \
         -u ${var.compute_instance_username} \
         --extra-vars 'monorail_version=${var.app_version}'
     EOT

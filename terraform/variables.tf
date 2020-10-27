@@ -25,7 +25,7 @@ variable "ssh_keys_folder" {
 }
 
 variable "ansible_playbook_location" {
-  default = "../ansible/playbook.yml"
+  default = "../ansible"
 }
 
 variable "app_version" {
