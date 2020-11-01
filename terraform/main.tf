@@ -17,6 +17,18 @@ locals {
   app_origin = "terraform"
 }
 
+data "template_file" "ansible_inventory" {
+  template = file(var.ansible_inventory_file_template)
+
+  vars = {
+    app_hosts = google_compute_instance.this.network_interface.0.access_config.0.nat_ip
+
+    ssh_user = var.compute_instance_username
+    ssh_private_key_file = abspath(local_file.private_key.filename)
+    monorail_version = var.app_version
+  }
+}
+
 resource "google_compute_instance" "this" {
   name = "${local.app_name}-app"
   machine_type = "f1-micro"
@@ -56,15 +68,15 @@ resource "google_compute_instance" "this" {
     ]
 
     connection {
-      host = google_compute_instance.this.network_interface.0.access_config.0.nat_ip
+      host = self.network_interface.0.access_config.0.nat_ip
       type = "ssh"
       user = var.compute_instance_username
-      private_key = local_file.private_key.filename
+      private_key = file(local_file.private_key.filename)
     }
   }
 
   provisioner "local-exec" {
-    command = "ssh-keyscan -H ${google_compute_instance.this.network_interface.0.access_config.0.nat_ip} >> ~/.ssh/known_hosts"
+    command = "ssh-keyscan -H ${self.network_interface.0.access_config.0.nat_ip} >> ~/.ssh/known_hosts"
   }
 }
 
@@ -80,12 +92,8 @@ resource "null_resource" "this" {
   provisioner "local-exec" {
     command = <<EOT
       ansible-galaxy install -r ${var.ansible_playbook_location}/requirements.yml
-      ansible-playbook \
-        -i '${google_compute_instance.this.network_interface.0.access_config.0.nat_ip},' \
-        --private-key ${local_file.private_key.filename} \
-        ${var.ansible_playbook_location}/playbook.yml \
-        -u ${var.compute_instance_username} \
-        --extra-vars 'monorail_version=${var.app_version}'
+      ansible-galaxy collection install -r ${var.ansible_playbook_location}/requirements.yml
+      ansible-playbook -i ${local_file.ansible_inventory.filename} ${var.ansible_playbook_location}/playbook.yml
     EOT
   }
 }
@@ -116,11 +124,18 @@ resource "tls_private_key" "this" {
 }
 
 resource "local_file" "private_key" {
-  content = tls_private_key.this.private_key_pem
+  sensitive_content = tls_private_key.this.private_key_pem
+  file_permission = "0600"
   filename = "${var.ssh_keys_folder}/id_rsa"
 }
 
 resource "local_file" "public_key" {
-  content = tls_private_key.this.public_key_pem
+  sensitive_content = tls_private_key.this.public_key_pem
+  file_permission = "0644"
   filename = "${var.ssh_keys_folder}/id_rsa.pub"
+}
+
+resource "local_file" "ansible_inventory" {
+  content = data.template_file.ansible_inventory.rendered
+  filename = var.ansible_inventory_file
 }

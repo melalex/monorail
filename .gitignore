@@ -175,3 +175,5 @@ override.tf.json
 # Custom
 terraform/terraform.tfvars
 .ssh
+terraform/admin-*.json
+ansible/inventory.ini

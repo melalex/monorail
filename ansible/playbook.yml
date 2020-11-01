@@ -1,26 +1,38 @@
-- name: Install dependencies
-  hosts: 127.0.0.1
-  connection: local
+- name: Prepare python environment
+  hosts: app
   tasks:
-    - name: Run ansible galaxy
-      command: ansible-galaxy install -r requirements.yml
-      register: galaxy_result
-      changed_when: '"was installed successfully" in galaxy_result.stdout'
+    - name: Add universe repository
+      become: yes
+      apt_repository:
+        repo: deb http://archive.ubuntu.com/ubuntu bionic universe
+        state: present
+
+    - name: Install pip3
+      become: yes
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install Docker SDK for Python
+      become: yes
+      pip:
+        name: docker
 
 - name: Docker
-  hosts: all
+  hosts: app
   tasks:
     - block:
         - name: Install Docker
           include_role:
-            name: ansible-role-docker
+            name: geerlingguy.docker
           vars:
             docker_install_compose: false
             docker_users:
               - '{{ ansible_ssh_user }}'
-      become: true
+      become: yes
 
     - name: Restart a container
+      become: yes
       community.general.docker_container:
         name: monorail-api
         image: docker.pkg.github.com/melalex/monorail/api:{{ monorail_version }}
