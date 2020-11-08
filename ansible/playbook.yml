@@ -31,6 +31,13 @@
               - '{{ ansible_ssh_user }}'
       become: yes
 
+    - name: Log into github registry
+      become: yes
+      community.general.docker_login:
+        registry_url: https://docker.pkg.github.com
+        username: melalex
+        password: '{{ github_token }}'
+
     - name: Restart a container
       become: yes
       community.general.docker_container:

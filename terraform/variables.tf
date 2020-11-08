@@ -26,6 +26,10 @@ variable "ssh_keys_folder" {
   default = ".ssh"
 }
 
+// GitHub vars
+
+variable "github_token" {}
+
 // Ansible vars
 
 variable "ansible_playbook_location" {

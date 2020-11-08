@@ -26,6 +26,7 @@ data "template_file" "ansible_inventory" {
     ssh_user = var.compute_instance_username
     ssh_private_key_file = abspath(local_file.private_key.filename)
     monorail_version = var.app_version
+    github_token = var.github_token
   }
 }
 
