@@ -4,7 +4,7 @@ on:
     branches:
       - 'master'
 jobs:
-  build:
+  deploy:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
@@ -52,3 +52,64 @@ jobs:
           body_path: target/changelog/CHANGELOG.md
           draft: false
           prerelease: false
+
+      - name: Install ansible
+        run: |
+          sudo apt update
+          sudo apt install software-properties-common
+          sudo apt-add-repository --yes --update ppa:ansible/ansible
+          sudo apt install ansible
+
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check terraform
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init terraform
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color terraform
+
+      - name: Terraform Plan
+        id: apply
+        continue-on-error: true
+        run: |
+          terraform apply \
+          -no-color \
+          -auto-approve \
+          -var '' \
+          -var '' \
+          terraform
+
+      - uses: actions/github-script@0.9.0
+        if: github.event_name == 'pull_request'
+        env:
+          APPLY: "terraform\n${{ steps.apply.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖${{ steps.validate.outputs.stdout }}
+            #### Terraform Apply 🚀\`${{ steps.apply.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`${process.env.APPLY}\`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+

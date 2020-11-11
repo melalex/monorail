@@ -1,6 +1,6 @@
 // GCP vars
 
-variable "credentials_file_path" {}
+variable "gcp_credentials_file_path" {}
 
 variable "compute_instance_username" {
   default = "ubuntu"
@@ -33,15 +33,15 @@ variable "github_token" {}
 // Ansible vars
 
 variable "ansible_playbook_location" {
-  default = "../ansible"
+  default = "ansible"
 }
 
 variable "ansible_inventory_file_template" {
-  default = "templates/inventory.ini.tmpl"
+  default = "terraform/templates/inventory.ini.tmpl"
 }
 
 variable "ansible_inventory_file" {
-  default = "../ansible/inventory.ini"
+  default = "ansible/inventory.ini"
 }
 
 // App vars

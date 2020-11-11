@@ -8,7 +8,7 @@ terraform {
 provider "google" {
   region = var.region
   zone = var.zone
-  credentials = file(var.credentials_file_path)
+  credentials = file(var.gcp_credentials_file_path)
 }
 
 locals {
