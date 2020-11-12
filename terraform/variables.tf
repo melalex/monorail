@@ -1,7 +1,5 @@
 // GCP vars
 
-variable "gcp_credentials_file_path" {}
-
 variable "compute_instance_username" {
   default = "ubuntu"
 }

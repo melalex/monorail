@@ -7,6 +7,10 @@ jobs:
   deploy:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      TF_VAR_github_token: ${{ secrets.GITHUB_TOKEN }}
+      TERRAFORM_WORKDIR: terraform
     steps:
       - uses: actions/checkout@v2
         with:
@@ -69,22 +73,16 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init terraform
+        run: terraform init ${{ env.TERRAFORM_WORKDIR }}
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate -no-color terraform
+        run: terraform validate -no-color ${{ env.TERRAFORM_WORKDIR }}
 
       - name: Terraform Plan
         id: apply
         continue-on-error: true
-        run: |
-          terraform apply \
-          -no-color \
-          -auto-approve \
-          -var '' \
-          -var '' \
-          terraform
+        run: terraform apply -no-color -auto-approve ${{ env.TERRAFORM_WORKDIR }}
 
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
@@ -112,4 +110,3 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
-
