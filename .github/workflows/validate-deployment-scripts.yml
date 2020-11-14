@@ -41,9 +41,10 @@ jobs:
 
       - name: Lint Ansible Playbook
         id: ansible
-        uses: ansible/ansible-lint-action@v4.1.0.post0
+        uses: ansible/ansible-lint-action@master
         with:
           targets: ansible/playbook.yml
+        continue-on-error: true
 
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
