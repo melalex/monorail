@@ -7,13 +7,13 @@ terraform {
 
 provider "google" {
   region = var.region
-  zone = var.zone
+  zone   = var.zone
 }
 
 locals {
   network_name = "default"
-  app_name = "monorail"
-  app_origin = "terraform"
+  app_name     = "monorail"
+  app_origin   = "terraform"
 }
 
 data "template_file" "ansible_inventory" {
@@ -22,25 +22,25 @@ data "template_file" "ansible_inventory" {
   vars = {
     app_hosts = google_compute_instance.this.network_interface.0.access_config.0.nat_ip
 
-    ssh_user = var.compute_instance_username
+    ssh_user             = var.compute_instance_username
     ssh_private_key_file = abspath(local_file.private_key.filename)
-    monorail_version = var.app_version
-    github_token = var.github_token
+    monorail_version     = var.app_version
+    github_token         = var.github_token
   }
 }
 
 resource "google_compute_instance" "this" {
-  name = "${local.app_name}-app"
+  name         = "${local.app_name}-app"
   machine_type = "f1-micro"
-  project = var.project
+  project      = var.project
 
   metadata = {
     ssh-keys = "${var.compute_instance_username}:${tls_private_key.this.public_key_openssh}"
   }
 
   labels = {
-    app = local.app_name
-    owner = var.app_owner
+    app    = local.app_name
+    owner  = var.app_owner
     origin = local.app_origin
   }
 
@@ -68,9 +68,9 @@ resource "google_compute_instance" "this" {
     ]
 
     connection {
-      host = self.network_interface.0.access_config.0.nat_ip
-      type = "ssh"
-      user = var.compute_instance_username
+      host        = self.network_interface.0.access_config.0.nat_ip
+      type        = "ssh"
+      user        = var.compute_instance_username
       private_key = file(local_file.private_key.filename)
     }
   }
@@ -106,7 +106,7 @@ resource "google_project_service" "firestore" {
 }
 
 resource "google_compute_firewall" "this" {
-  name = "${google_compute_instance.this.name}-firewall"
+  name    = "${google_compute_instance.this.name}-firewall"
   network = local.network_name
   project = var.project
 
@@ -120,22 +120,22 @@ resource "google_compute_firewall" "this" {
 
 resource "tls_private_key" "this" {
   algorithm = "RSA"
-  rsa_bits = 4096
+  rsa_bits  = 4096
 }
 
 resource "local_file" "private_key" {
   sensitive_content = tls_private_key.this.private_key_pem
-  file_permission = "0600"
-  filename = "${var.ssh_keys_folder}/id_rsa"
+  file_permission   = "0600"
+  filename          = "${var.ssh_keys_folder}/id_rsa"
 }
 
 resource "local_file" "public_key" {
   sensitive_content = tls_private_key.this.public_key_pem
-  file_permission = "0644"
-  filename = "${var.ssh_keys_folder}/id_rsa.pub"
+  file_permission   = "0644"
+  filename          = "${var.ssh_keys_folder}/id_rsa.pub"
 }
 
 resource "local_file" "ansible_inventory" {
-  content = data.template_file.ansible_inventory.rendered
+  content  = data.template_file.ansible_inventory.rendered
   filename = var.ansible_inventory_file
 }
