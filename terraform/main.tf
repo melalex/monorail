@@ -74,10 +74,6 @@ resource "google_compute_instance" "this" {
       private_key = file(local_file.private_key.filename)
     }
   }
-
-  provisioner "local-exec" {
-    command = "ssh-keyscan -H ${self.network_interface.0.access_config.0.nat_ip} >> ~/.ssh/known_hosts"
-  }
 }
 
 resource "null_resource" "this" {
@@ -91,6 +87,7 @@ resource "null_resource" "this" {
 
   provisioner "local-exec" {
     command = <<EOT
+      ssh-keyscan -H ${google_compute_instance.this.network_interface.0.access_config.0.nat_ip} >> ~/.ssh/known_hosts
       ansible-galaxy install -r ${var.ansible_playbook_location}/requirements.yml
       ansible-galaxy collection install -r ${var.ansible_playbook_location}/requirements.yml
       ansible-playbook -i ${local_file.ansible_inventory.filename} ${var.ansible_playbook_location}/playbook.yml
