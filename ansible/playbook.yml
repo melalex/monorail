@@ -42,7 +42,7 @@
       become: yes
       community.general.docker_container:
         name: monorail-api
-        image: docker.pkg.github.com/melalex/monorail/api:{{ monorail_version }}
+        image: docker.pkg.github.com/melalex/monorail/monorail-api:{{ monorail_version }}
         state: started
         restart: yes
         ports:
