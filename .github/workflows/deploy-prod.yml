@@ -43,6 +43,13 @@ jobs:
           sbt 'release skip-tests with-defaults'
           echo "::set-output name=latest-tag::$(git describe --abbrev=0)"
 
+      - name: Extract app version
+        id: version
+        run: |
+          version=$(echo ${{ steps.sbt-release.outputs.latest-tag }} | cut -c 2-)
+          echo "App version is $version"
+          echo "::set-output name=value::$version"
+
       - name: Create GitHub release
         uses: actions/create-release@v1
         env:
@@ -70,4 +77,4 @@ jobs:
       - name: Terraform Apply
         id: apply
         continue-on-error: true
-        run: terraform apply -no-color -auto-approve -var="app_version=${{ steps.sbt-release.outputs.latest-tag }}" ${{ env.TERRAFORM_WORKDIR }}
+        run: terraform apply -no-color -auto-approve -var="app_version=${{ steps.version.outputs.value }}" ${{ env.TERRAFORM_WORKDIR }}
