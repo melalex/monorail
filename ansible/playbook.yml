@@ -1,0 +1,49 @@
+- name: Prepare python environment
+  hosts: app
+  tasks:
+    - name: Add universe repository
+      become: yes
+      apt_repository:
+        repo: deb http://archive.ubuntu.com/ubuntu bionic universe
+        state: present
+
+    - name: Install pip3
+      become: yes
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install Docker SDK for Python
+      become: yes
+      pip:
+        name: docker
+
+- name: Docker
+  hosts: app
+  tasks:
+    - block:
+        - name: Install Docker
+          include_role:
+            name: geerlingguy.docker
+          vars:
+            docker_install_compose: false
+            docker_users:
+              - '{{ ansible_ssh_user }}'
+      become: yes
+
+    - name: Log into github registry
+      become: yes
+      community.general.docker_login:
+        registry_url: https://docker.pkg.github.com
+        username: melalex
+        password: '{{ github_token }}'
+
+    - name: Restart a container
+      become: yes
+      community.general.docker_container:
+        name: monorail-api
+        image: docker.pkg.github.com/melalex/monorail/api:{{ monorail_version }}
+        state: started
+        restart: yes
+        ports:
+          - "8080:8080"
