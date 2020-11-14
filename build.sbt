@@ -1,5 +1,15 @@
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Path, Paths}
+import java.time.LocalDate
+
+import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
+
+lazy val changelogTemplatePath    = settingKey[Path]("Path to CHANGELOG.md template")
+lazy val changelogDestinationPath = settingKey[Path]("Path to CHANGELOG.md destination")
+lazy val changelogGenerate        = taskKey[Unit]("Generates CHANGELOG.md file based on git log")
+
 name := "monorail"
-version := "0.1"
 scalaVersion := "2.13.3"
 
 scalafixScalaBinaryVersion := "2.13.3"
@@ -7,7 +17,25 @@ scalafixScalaBinaryVersion := "2.13.3"
 scalafmtOnCompile := true
 scalafixOnCompile := true
 
+dockerBaseImage := "adoptopenjdk/openjdk14:jre-14.0.2_12-alpine"
+dockerExposedPorts := List(8080)
+dockerRepository := Some("docker.pkg.github.com")
+dockerUsername := Some("melalex")
+dockerAlias := DockerAlias(dockerRepository.value, dockerUsername.value, s"${name.value}/monorail-api", Some(version.value))
+dockerUpdateLatest := true
+dockerCommands ++= List(Cmd("USER", "root"), ExecCmd("RUN", "apk", "add", "--no-cache", "bash"))
+
+releaseCommitMessage := s"[skip ci] set version to ${(version in ThisBuild).value}"
+
+majorRegexes := List(ChangeLogger.BreakingChangeRegEx)
+minorRegexes := List(ChangeLogger.FeatureRegEx)
+bugfixRegexes := List(ChangeLogger.FixRegEx, ChangeLogger.RefactoringRegEx)
+
+changelogTemplatePath := Paths.get("project/CHANGELOG.md.ssp")
+changelogDestinationPath := Paths.get("target/changelog/CHANGELOG.md")
+
 addCompilerPlugin(scalafixSemanticdb)
+enablePlugins(JavaAppPackaging, DockerPlugin)
 
 libraryDependencies ++= {
 
@@ -22,7 +50,7 @@ libraryDependencies ++= {
   val scalaTestVersion  = "3.2.1"
   val scalaMockVersion  = "5.0.0"
 
-  Seq(
+  List(
     // Akka
     "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
     "com.typesafe.akka" %% "akka-stream"      % akkaVersion,
@@ -47,4 +75,30 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion      % Test,
     "com.typesafe.akka" %% "akka-stream-testkit"      % akkaVersion      % Test
   )
+}
+
+releaseProcess := List[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  ReleaseStep(releaseStepTask(changelogGenerate)),
+  commitReleaseVersion,
+  tagRelease,
+  ReleaseStep(releaseStepTask(publish in Docker)),
+  setNextVersion,
+  commitNextVersion,
+  pushChanges
+)
+
+changelogGenerate := {
+  val changelog = ChangeLogger.generateChangelogString(
+    changelogTemplatePath.value,
+    version.value,
+    LocalDate.now(),
+    unreleasedCommits.value.map(_.msg)
+  )
+
+  IO.write(changelogDestinationPath.value.toFile, changelog.getBytes(StandardCharsets.UTF_8))
 }
