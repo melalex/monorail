@@ -87,6 +87,8 @@ resource "null_resource" "this" {
 
   provisioner "local-exec" {
     command = <<EOT
+      mkdir ~/.ssh
+      chmod 0700 ~/.ssh
       ssh-keyscan -H ${google_compute_instance.this.network_interface.0.access_config.0.nat_ip} >> ~/.ssh/known_hosts
       ansible-galaxy install -r ${var.ansible_playbook_location}/requirements.yml
       ansible-galaxy collection install -r ${var.ansible_playbook_location}/requirements.yml
