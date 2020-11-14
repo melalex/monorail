@@ -31,4 +31,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_user_name: GitHub Actions
-          commit_message: "[skip ci] Apply linting changes"
+          commit_message: "[skip ci] apply linting changes"
