@@ -36,9 +36,6 @@ jobs:
 
       - name: Increment version, tag, build an artifact and push it to GitHub package registry
         id: sbt-release
-        outputs:
-          tag:
-            description: 'Latest tag'
         run: |
           git config user.email "alexander.melashchenko@gmail.com"
           git config user.name "GitHub Actions"
@@ -51,8 +48,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ steps.sbt-release.outputs.tag }}
-          release_name: Release ${{ steps.sbt-release.outputs.tag }}
+          tag_name: ${{ steps.sbt-release.outputs.latest-tag }}
+          release_name: Release ${{ steps.sbt-release.outputs.latest-tag }}
           body_path: target/changelog/CHANGELOG.md
           draft: false
           prerelease: false
@@ -73,4 +70,4 @@ jobs:
       - name: Terraform Apply
         id: apply
         continue-on-error: true
-        run: terraform apply -no-color -auto-approve ${{ env.TERRAFORM_WORKDIR }}
+        run: terraform apply -no-color -auto-approve -var="app_version=${{ steps.sbt-release.outputs.latest-tag }}" ${{ env.TERRAFORM_WORKDIR }}
