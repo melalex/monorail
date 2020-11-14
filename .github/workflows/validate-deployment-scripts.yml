@@ -48,6 +48,9 @@ jobs:
 
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+          ANSIBLE: "ansible\n${{ steps.ansible.outputs.stdout }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -59,13 +62,13 @@ jobs:
 
             <details><summary>Show Plan</summary>
 
-            \`\`\`${{ steps.plan.outputs.stdout }}\`\`\`
+            \`\`\`${process.env.PLAN}\`\`\`
 
             </details>
 
             <details><summary>Show Ansible lint</summary>
 
-            \`\`\`${{ steps.ansible.outputs.stdout }}\`\`\`
+            \`\`\`${process.env.ANSIBLE}\`\`\`
 
             </details>
 
