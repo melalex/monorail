@@ -14,8 +14,8 @@ scalaVersion := "2.13.3"
 
 scalafixScalaBinaryVersion := "2.13.3"
 
-scalafmtOnCompile := true
-scalafixOnCompile := true
+scalafmtOnCompile := false
+scalafixOnCompile := false
 
 dockerBaseImage := "adoptopenjdk/openjdk14:jre-14.0.2_12-alpine"
 dockerExposedPorts := List(8080)
