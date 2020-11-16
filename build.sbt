@@ -40,15 +40,16 @@ enablePlugins(JavaAppPackaging, DockerPlugin)
 libraryDependencies ++= {
 
   // Dependencies versions
-  val akkaHttpVersion   = "10.2.0"
-  val akkaVersion       = "2.6.8"
-  val akkaJsonVersion   = "1.34.0"
-  val macWireVersion    = "2.3.7"
-  val circeVersion      = "0.13.0"
-  val logbackVersion    = "1.2.3"
-  val pureConfigVersion = "0.13.0"
-  val scalaTestVersion  = "3.2.1"
-  val scalaMockVersion  = "5.0.0"
+  val akkaHttpVersion        = "10.2.0"
+  val akkaVersion            = "2.6.8"
+  val akkaJsonVersion        = "1.34.0"
+  val macWireVersion         = "2.3.7"
+  val circeVersion           = "0.13.0"
+  val logbackVersion         = "1.2.3"
+  val googleApiClientVersion = "1.30.4"
+  val pureConfigVersion      = "0.13.0"
+  val scalaTestVersion       = "3.2.1"
+  val scalaMockVersion       = "5.0.0"
 
   List(
     // Akka
@@ -66,8 +67,9 @@ libraryDependencies ++= {
     "io.circe"          %% "circe-parser"    % circeVersion,
     "de.heikoseeberger" %% "akka-http-circe" % akkaJsonVersion,
     // Other
-    "ch.qos.logback"        % "logback-classic" % logbackVersion,
-    "com.github.pureconfig" %% "pureconfig"     % pureConfigVersion,
+    "ch.qos.logback"        % "logback-classic"   % logbackVersion,
+    "com.google.api-client" % "google-api-client" % googleApiClientVersion,
+    "com.github.pureconfig" %% "pureconfig"       % pureConfigVersion,
     // Test
     "org.scalatest"     %% "scalatest"                % scalaTestVersion % Test,
     "org.scalamock"     %% "scalamock"                % scalaMockVersion % Test,
