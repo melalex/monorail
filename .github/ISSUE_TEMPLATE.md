@@ -1,3 +1,3 @@
-Expected behaviour:
+Expected behavior:
 - [ ] First
 - [ ] Second

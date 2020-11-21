@@ -1,7 +1,7 @@
 package com.melalex.monorail.fixtures
 
 import com.melalex.monorail.health.dto.{HealthCheckResultDto, SubSystemHealthDto}
-import com.melalex.monorail.health.models.{HealthCheckResult, HealthCheckStatus, SubSystemHealth}
+import com.melalex.monorail.health.model.{HealthCheckResult, HealthCheckStatus, SubSystemHealth}
 
 trait HealthCheckFixture {
 

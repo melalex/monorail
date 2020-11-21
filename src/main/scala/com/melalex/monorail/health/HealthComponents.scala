@@ -1,10 +1,10 @@
 package com.melalex.monorail.health
 
 import akka.actor.ActorSystem
-import com.melalex.monorail.health.mappers.{HealthCheckResultMapper, SubSystemHealthMapper}
-import com.melalex.monorail.health.routes.HealthRouteProvider
-import com.melalex.monorail.health.services.impl.SensorBackedHealthService
-import com.melalex.monorail.health.services.sensors.{MonorailSensor, Sensor}
+import com.melalex.monorail.health.mapper.{HealthCheckResultMapper, SubSystemHealthMapper}
+import com.melalex.monorail.health.route.HealthRouteProvider
+import com.melalex.monorail.health.service.impl.SensorBackedHealthService
+import com.melalex.monorail.health.service.sensors.{MonorailSensor, Sensor}
 import com.melalex.monorail.util.RouteProvider
 import com.softwaremill.macwire.{wire, wireSet}
 

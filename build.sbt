@@ -38,10 +38,9 @@ addCompilerPlugin(scalafixSemanticdb)
 enablePlugins(JavaAppPackaging, DockerPlugin)
 
 libraryDependencies ++= {
-
-  // Dependencies versions
   val akkaHttpVersion        = "10.2.0"
   val akkaVersion            = "2.6.8"
+  val akkaSessionVersion     = "0.5.11"
   val akkaJsonVersion        = "1.34.0"
   val macWireVersion         = "2.3.7"
   val circeVersion           = "0.13.0"
@@ -51,32 +50,41 @@ libraryDependencies ++= {
   val scalaTestVersion       = "3.2.1"
   val scalaMockVersion       = "5.0.0"
 
-  List(
-    // Akka
-    "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
-    "com.typesafe.akka" %% "akka-stream"      % akkaVersion,
-    "com.typesafe.akka" %% "akka-pki"         % akkaVersion,
-    "com.typesafe.akka" %% "akka-slf4j"       % akkaVersion,
-    "com.typesafe.akka" %% "akka-discovery"   % akkaVersion,
-    "com.typesafe.akka" %% "akka-http"        % akkaHttpVersion,
-    // DI
-    "com.softwaremill.macwire" %% "macros" % macWireVersion,
-    // Json Ser/Der
-    "io.circe"          %% "circe-core"      % circeVersion,
-    "io.circe"          %% "circe-generic"   % circeVersion,
-    "io.circe"          %% "circe-parser"    % circeVersion,
-    "de.heikoseeberger" %% "akka-http-circe" % akkaJsonVersion,
-    // Other
-    "ch.qos.logback"        % "logback-classic"   % logbackVersion,
-    "com.google.api-client" % "google-api-client" % googleApiClientVersion,
-    "com.github.pureconfig" %% "pureconfig"       % pureConfigVersion,
-    // Test
+  val akkaDependencies = List(
+    "com.typesafe.akka"                  %% "akka-actor-typed" % akkaVersion,
+    "com.typesafe.akka"                  %% "akka-stream"      % akkaVersion,
+    "com.typesafe.akka"                  %% "akka-pki"         % akkaVersion,
+    "com.typesafe.akka"                  %% "akka-slf4j"       % akkaVersion,
+    "com.typesafe.akka"                  %% "akka-discovery"   % akkaVersion,
+    "com.typesafe.akka"                  %% "akka-http"        % akkaHttpVersion,
+    "com.softwaremill.akka-http-session" %% "core"             % akkaSessionVersion,
+    "com.softwaremill.akka-http-session" %% "jwt"              % akkaSessionVersion
+  )
+
+  val jsonDependencies = List(
+    "io.circe"          %% "circe-core"           % circeVersion,
+    "io.circe"          %% "circe-generic"        % circeVersion,
+    "io.circe"          %% "circe-parser"         % circeVersion,
+    "io.circe"          %% "circe-generic-extras" % circeVersion,
+    "de.heikoseeberger" %% "akka-http-circe"      % akkaJsonVersion
+  )
+
+  val utilDependencies = List(
+    "com.softwaremill.macwire" %% "macros"           % macWireVersion,
+    "ch.qos.logback"           % "logback-classic"   % logbackVersion,
+    "com.google.api-client"    % "google-api-client" % googleApiClientVersion,
+    "com.github.pureconfig"    %% "pureconfig"       % pureConfigVersion
+  )
+
+  val testDependencies = List(
     "org.scalatest"     %% "scalatest"                % scalaTestVersion % Test,
     "org.scalamock"     %% "scalamock"                % scalaMockVersion % Test,
     "com.typesafe.akka" %% "akka-http-testkit"        % akkaHttpVersion  % Test,
     "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion      % Test,
     "com.typesafe.akka" %% "akka-stream-testkit"      % akkaVersion      % Test
   )
+
+  akkaDependencies ::: jsonDependencies ::: utilDependencies ::: testDependencies
 }
 
 releaseProcess := List[ReleaseStep](
