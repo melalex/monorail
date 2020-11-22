@@ -1,22 +1,21 @@
 package com.melalex.monorail.session.srvice
 
+import akka.actor.Scheduler
+import akka.pattern.after
 import com.melalex.monorail.session.model.{PersistentUserSession, UserSession}
 import com.melalex.monorail.session.repository.UserSessionRepository
 import com.melalex.monorail.util.CustomMapper
 import com.softwaremill.session.{RefreshTokenData, RefreshTokenLookupResult, RefreshTokenStorage}
-import org.slf4j.LoggerFactory
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.{Duration, FiniteDuration}
 import scala.concurrent.{ExecutionContext, Future}
 
 class UserSessionRefreshTokenStorage(
     private val userSessionRepository: UserSessionRepository,
     private val refreshTokenDataMapper: CustomMapper[RefreshTokenData[UserSession], PersistentUserSession],
     private val persistentUserSessionMapper: CustomMapper[PersistentUserSession, RefreshTokenLookupResult[UserSession]]
-)(implicit executor: ExecutionContext)
+)(private implicit val executor: ExecutionContext, private implicit val scheduler: Scheduler)
     extends RefreshTokenStorage[UserSession] {
-
-  private val log = LoggerFactory.getLogger(classOf[UserSessionRefreshTokenStorage])
 
   override def lookup(selector: String): Future[Option[RefreshTokenLookupResult[UserSession]]] =
     userSessionRepository
@@ -27,9 +26,7 @@ class UserSessionRefreshTokenStorage(
 
   override def remove(selector: String): Future[Unit] = userSessionRepository.deleteBySelector(selector)
 
-  override def schedule[S](after: Duration)(op: => Future[S]): Unit = {
-    log.debug("Running scheduled operation immediately")
-    op
-    Future.successful(())
+  override def schedule[S](duration: Duration)(op: => Future[S]): Unit = duration match {
+    case finiteDuration: FiniteDuration => after(finiteDuration, scheduler)(op)
   }
 }

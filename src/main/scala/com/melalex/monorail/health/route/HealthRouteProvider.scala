@@ -21,7 +21,7 @@ class HealthRouteProvider(
   override def provideRoute: Route =
     path("health") {
       get {
-        complete(healthService.checkHealth.map(healthCheckResultMapper).map(_.asJson))
+        complete(healthService.checkHealth.map(healthCheckResultMapper.mapAToB).map(_.asJson))
       }
     }
 }
