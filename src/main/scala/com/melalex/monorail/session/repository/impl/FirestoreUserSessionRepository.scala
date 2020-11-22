@@ -5,7 +5,7 @@ import com.melalex.monorail.session.repository.UserSessionRepository
 
 import scala.concurrent.Future
 
-class FirestoreUserSessionRepository extends UserSessionRepository {
+private[session] class FirestoreUserSessionRepository extends UserSessionRepository {
 
   override def findBySelector(selector: String): Future[Option[PersistentUserSession]] = Future.successful(None)
 

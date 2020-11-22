@@ -10,7 +10,7 @@ import com.softwaremill.session.{RefreshTokenData, RefreshTokenLookupResult, Ref
 import scala.concurrent.duration.{Duration, FiniteDuration}
 import scala.concurrent.{ExecutionContext, Future}
 
-class UserSessionRefreshTokenStorage(
+private[session] class UserSessionRefreshTokenStorage(
     private val userSessionRepository: UserSessionRepository,
     private val refreshTokenDataMapper: CustomMapper[RefreshTokenData[UserSession], PersistentUserSession],
     private val persistentUserSessionMapper: CustomMapper[PersistentUserSession, RefreshTokenLookupResult[UserSession]]

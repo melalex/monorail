@@ -4,7 +4,7 @@ import com.melalex.monorail.session.model.{PersistentUserSession, UserSession}
 import com.melalex.monorail.util.CustomMapper
 import com.softwaremill.session.RefreshTokenData
 
-class RefreshTokenDataMapper extends CustomMapper[RefreshTokenData[UserSession], PersistentUserSession] {
+private[session] class RefreshTokenDataMapper extends CustomMapper[RefreshTokenData[UserSession], PersistentUserSession] {
 
   override def mapAToB(source: RefreshTokenData[UserSession]): PersistentUserSession = PersistentUserSession(
     userId = source.forSession.userId,

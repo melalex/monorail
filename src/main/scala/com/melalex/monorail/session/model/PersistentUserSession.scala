@@ -2,7 +2,7 @@ package com.melalex.monorail.session.model
 
 import java.util.Locale
 
-case class PersistentUserSession(
+private[session] case class PersistentUserSession(
     userId: String,
     locale: Locale,
     selector: String,
