@@ -12,10 +12,10 @@ import io.circe.syntax._
 import scala.concurrent.ExecutionContext
 
 class HealthRouteProvider(
-    private val healthService: HealthService,
-    private val healthCheckResultMapper: HealthCheckResultMapper,
-    private implicit val executionContext: ExecutionContext
-) extends RouteProvider
+    healthService: HealthService,
+    healthCheckResultMapper: HealthCheckResultMapper
+)(implicit executionContext: ExecutionContext)
+    extends RouteProvider
     with FailFastCirceSupport {
 
   override def provideRoute: Route =

@@ -3,7 +3,7 @@ package com.melalex.monorail.util
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 
-class CompositeRouteProvider(val delegates: Set[RouteProvider]) {
+class CompositeRouteProvider(delegates: Set[RouteProvider]) {
 
   def provideRoute: Route =
     delegates

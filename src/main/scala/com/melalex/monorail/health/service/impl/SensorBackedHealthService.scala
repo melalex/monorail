@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
 
-class SensorBackedHealthService(
-    private val sensors: Set[Sensor],
-    private implicit val executionContext: ExecutionContext
-) extends HealthService {
+class SensorBackedHealthService(sensors: Set[Sensor])(implicit executionContext: ExecutionContext) extends HealthService {
 
   private val log = LoggerFactory.getLogger(classOf[SensorBackedHealthService])
 

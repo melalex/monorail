@@ -11,10 +11,10 @@ import scala.concurrent.duration.{Duration, FiniteDuration}
 import scala.concurrent.{ExecutionContext, Future}
 
 private[session] class UserSessionRefreshTokenStorage(
-    private val userSessionRepository: UserSessionRepository,
-    private val refreshTokenDataMapper: CustomMapper[RefreshTokenData[UserSession], PersistentUserSession],
-    private val persistentUserSessionMapper: CustomMapper[PersistentUserSession, RefreshTokenLookupResult[UserSession]]
-)(private implicit val executor: ExecutionContext, private implicit val scheduler: Scheduler)
+    userSessionRepository: UserSessionRepository,
+    refreshTokenDataMapper: CustomMapper[RefreshTokenData[UserSession], PersistentUserSession],
+    persistentUserSessionMapper: CustomMapper[PersistentUserSession, RefreshTokenLookupResult[UserSession]]
+)(implicit executor: ExecutionContext, scheduler: Scheduler)
     extends RefreshTokenStorage[UserSession] {
 
   override def lookup(selector: String): Future[Option[RefreshTokenLookupResult[UserSession]]] =
