@@ -3,8 +3,8 @@ package com.melalex.monorail.session
 import akka.http.scaladsl.server.{Directive0, Directive1}
 import com.melalex.monorail.session.model.UserSession
 import com.softwaremill.session.SessionDirectives.{invalidateSession, requiredSession, setSession}
-import com.softwaremill.session.{RefreshTokenStorage, SessionManager}
 import com.softwaremill.session.SessionOptions.{refreshable, usingHeaders}
+import com.softwaremill.session.{RefreshTokenStorage, SessionManager}
 
 import scala.concurrent.ExecutionContext
 

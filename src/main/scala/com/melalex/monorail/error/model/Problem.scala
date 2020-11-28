@@ -6,6 +6,6 @@ case class Problem(
     tittleKey: Option[String] = None,
     status: Option[Int] = None,
     detailKey: Option[String] = None,
-    instanceKey: Option[String] = None,
+    instance: Option[String] = None,
     causes: Seq[Problem] = Nil
 )

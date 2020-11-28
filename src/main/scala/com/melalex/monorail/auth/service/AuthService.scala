@@ -1,11 +1,11 @@
 package com.melalex.monorail.auth.service
 
-import akka.stream.scaladsl.Source
-import com.melalex.monorail.session.model.UserSession
+import com.melalex.monorail.user.model.User
 
 import scala.concurrent.Future
+import scala.util.Try
 
 trait AuthService {
 
-  def authWithGoogle(code: String): Source[UserSession, Future[UserSession]]
+  def authWithGoogle(code: String): Future[User]
 }

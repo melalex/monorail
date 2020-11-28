@@ -6,11 +6,10 @@ import io.circe.generic.extras._
 
 @JsonCodec
 case class ProblemDto(
-    internalMessage: String,
-    @JsonKey("type") problemType: Option[String],
-    tittle: Option[String],
-    status: Option[Int],
-    detail: Option[String],
-    instance: Option[String],
-    causes: Seq[Problem]
+    @JsonKey("type") problemType: Option[String] = None,
+    tittle: Option[String] = None,
+    status: Option[Int] = None,
+    detail: Option[String] = None,
+    instance: Option[String] = None,
+    causes: Seq[Problem] = Nil
 )

@@ -49,6 +49,7 @@ libraryDependencies ++= {
   val pureConfigVersion      = "0.13.0"
   val scalaTestVersion       = "3.2.1"
   val scalaMockVersion       = "5.0.0"
+  val chimneyVersion         = "0.6.1"
 
   val akkaDependencies = List(
     "com.typesafe.akka"                  %% "akka-actor-typed" % akkaVersion,
@@ -70,10 +71,11 @@ libraryDependencies ++= {
   )
 
   val utilDependencies = List(
-    "com.softwaremill.macwire" %% "macros"           % macWireVersion,
     "ch.qos.logback"           % "logback-classic"   % logbackVersion,
     "com.google.api-client"    % "google-api-client" % googleApiClientVersion,
-    "com.github.pureconfig"    %% "pureconfig"       % pureConfigVersion
+    "com.softwaremill.macwire" %% "macros"           % macWireVersion,
+    "com.github.pureconfig"    %% "pureconfig"       % pureConfigVersion,
+    "io.scalaland"             %% "chimney"          % chimneyVersion
   )
 
   val testDependencies = List(
