@@ -7,7 +7,6 @@ import com.melalex.monorail.health.service.HealthService
 import com.melalex.monorail.util.RouteProvider
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 import io.circe.generic.auto._
-import io.circe.syntax._
 
 import scala.concurrent.ExecutionContext
 

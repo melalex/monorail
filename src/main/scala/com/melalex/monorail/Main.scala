@@ -11,7 +11,7 @@ import scala.util.{Failure, Success}
 object Main extends App with AppComponents with AkkaComponents {
 
   Http()
-    .newServerAt(serverProperties.host, serverProperties.port)
+    .newServerAt(monorailProperties.server.host, monorailProperties.server.port)
     .bindFlow(routes)
     .onComplete {
       case Success(binding) => afterStart(binding)

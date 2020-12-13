@@ -7,4 +7,6 @@ package object error {
   def invalidCredentials(): Problem = ???
 
   def internalServerError(): Problem = ???
+
+  def badGateway(): Problem = ???
 }

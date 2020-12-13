@@ -46,6 +46,7 @@ libraryDependencies ++= {
   val circeVersion           = "0.13.0"
   val logbackVersion         = "1.2.3"
   val googleApiClientVersion = "1.31.1"
+  val fireStoreClientVersion = "2.1.0"
   val pureConfigVersion      = "0.13.0"
   val scalaTestVersion       = "3.2.1"
   val scalaMockVersion       = "5.0.0"
@@ -70,12 +71,16 @@ libraryDependencies ++= {
     "de.heikoseeberger" %% "akka-http-circe"      % akkaJsonVersion
   )
 
+  val googleDependencies = List(
+    "com.google.api-client" % "google-api-client"      % googleApiClientVersion,
+    "com.google.cloud"      % "google-cloud-firestore" % fireStoreClientVersion
+  )
+
   val utilDependencies = List(
-    "ch.qos.logback"           % "logback-classic"   % logbackVersion,
-    "com.google.api-client"    % "google-api-client" % googleApiClientVersion,
-    "com.softwaremill.macwire" %% "macros"           % macWireVersion,
-    "com.github.pureconfig"    %% "pureconfig"       % pureConfigVersion,
-    "io.scalaland"             %% "chimney"          % chimneyVersion
+    "ch.qos.logback"           % "logback-classic" % logbackVersion,
+    "com.softwaremill.macwire" %% "macros"         % macWireVersion,
+    "com.github.pureconfig"    %% "pureconfig"     % pureConfigVersion,
+    "io.scalaland"             %% "chimney"        % chimneyVersion
   )
 
   val testDependencies = List(
@@ -86,7 +91,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-stream-testkit"      % akkaVersion      % Test
   )
 
-  akkaDependencies ::: jsonDependencies ::: utilDependencies ::: testDependencies
+  akkaDependencies ::: jsonDependencies ::: googleDependencies ::: utilDependencies ::: testDependencies
 }
 
 releaseProcess := List[ReleaseStep](
