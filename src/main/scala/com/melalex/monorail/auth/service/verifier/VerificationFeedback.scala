@@ -1,9 +1,9 @@
-package com.melalex.monorail.auth.service.google
+package com.melalex.monorail.auth.service.verifier
 
 import java.net.URL
 import java.util.Locale
 
-case class GoogleAuthResponse(
+case class VerificationFeedback(
     id: String,
     email: Option[String],
     emailVerified: Boolean,

@@ -4,7 +4,7 @@ import java.util.Locale
 
 import akka.http.scaladsl.server.Directive1
 import akka.http.scaladsl.server.Directives.selectPreferredLanguage
-import com.melalex.monorail.config.properties.MonorailProperties
+import com.melalex.monorail.config.property.MonorailProperties
 
 class I18nDirectives(monorailProperties: MonorailProperties) {
 

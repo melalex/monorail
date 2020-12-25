@@ -23,7 +23,7 @@ object Main extends App with AppComponents with AkkaComponents {
   }
 
   private def onError(exception: Throwable): Future[Terminated] = {
-    system.log.error("Failed to bind. Shutting down", exception)
+    system.log.error("Failed to bind. Shutting down...", exception)
 
     system.terminate()
   }

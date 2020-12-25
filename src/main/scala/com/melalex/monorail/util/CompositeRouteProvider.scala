@@ -24,6 +24,6 @@ class CompositeRouteProvider(
 
   private val myExceptionHandler: ExceptionHandler = ExceptionHandler {
     case ThrowableProblem(problem, _) => error(problem)
-    case _                            => error(internalServerError())
+    case _                            => error(internalServerError)
   }
 }

@@ -1,8 +1,8 @@
-import java.nio.file.Path
 import java.time.LocalDate
 
 import org.fusesource.scalate._
 
+import scala.reflect.io.Path
 import scala.util.matching._
 
 object ChangeLogger {
@@ -31,7 +31,7 @@ object ChangeLogger {
       "changed" -> commits(CommitType.Refactoring)
     )
 
-    engine.layout(template.toString, parameters)
+    engine.layout(template.path, parameters)
   }
 
   private def mapToCommit(commitMsg: String): Commit = Commit(

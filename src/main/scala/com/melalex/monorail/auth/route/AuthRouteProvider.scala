@@ -3,7 +3,8 @@ package com.melalex.monorail.auth.route
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.Materializer
-import com.melalex.monorail.auth.dto.GoogleLoginDto
+import com.melalex.monorail.auth.dto.LoginDto
+import com.melalex.monorail.auth.model.AuthProvider
 import com.melalex.monorail.auth.service.AuthService
 import com.melalex.monorail.session.UserSessionDirectives
 import com.melalex.monorail.session.model.UserSession
@@ -24,10 +25,13 @@ class AuthRouteProvider(
   import authService._
   import userSessionDirectives._
 
-  override def provideRoute: Route = path("login" / "google") {
+  private val providers = Map("google" -> AuthProvider.Google)
+    .withDefaultValue(AuthProvider.None)
+
+  override def provideRoute: Route = path("login" / providers) { authProvider =>
     post {
-      entity(as[GoogleLoginDto]) { login =>
-        onSuccess(authWithGoogle(login.code)) { value =>
+      entity(as[LoginDto]) { login =>
+        onSuccess(authenticate(authProvider, login.code)) { value =>
           setUserSession(value.transformInto[UserSession]) {
             complete(value)
           }

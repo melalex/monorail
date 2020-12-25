@@ -1,54 +1,53 @@
-package com.melalex.monorail.auth.service.google.impl
+package com.melalex.monorail.auth.service.verifier.impl
+
+import java.io.IOException
+import java.net.URL
+import java.util.Locale
 
 import com.google.api.client.auth.oauth2.TokenResponseException
 import com.google.api.client.googleapis.auth.oauth2.{GoogleAuthorizationCodeTokenRequest, GoogleClientSecrets, GoogleTokenResponse}
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
-import com.melalex.monorail.auth.service.google.{GoogleAuthResponse, GoogleClient}
-import com.melalex.monorail.config.properties.GoogleAuthProperties
+import com.melalex.monorail.auth.service.verifier.{TokenVerifier, VerificationFeedback}
+import com.melalex.monorail.config.property.GoogleProperties
 import com.melalex.monorail.error.model.ThrowableProblem
 import com.melalex.monorail.error.{badGateway, internalServerError, invalidCredentials}
 import com.melalex.monorail.util.cast
 
-import java.io.IOException
-import java.net.URL
-import java.util.Locale
 import scala.concurrent.{ExecutionContext, Future}
 
-class GoogleApiGoogleClient(
+class GoogleTokenVerifier(
     clientSecrets: GoogleClientSecrets,
-    googleAuthProperties: GoogleAuthProperties
+    googleProperties: GoogleProperties
 )(implicit executionContext: ExecutionContext)
-    extends GoogleClient {
+    extends TokenVerifier {
 
-  override def exchangeCode(code: String): Future[GoogleAuthResponse] =
+  override def verify(code: String): Future[VerificationFeedback] =
     Future
       .successful(createAuthRequest(code))
       .map(_.execute)
-      .map(toGoogleAuthResponse)
+      .map(toVerificationFeedback)
       .recover {
-        case ex: IOException            => throw ThrowableProblem(badGateway(), ex)
-        case ex: TokenResponseException => throw ThrowableProblem(invalidCredentials(), ex)
-        case ex                         => throw ThrowableProblem(internalServerError(), ex)
+        case ex: IOException            => throw ThrowableProblem(badGateway, ex)
+        case ex: TokenResponseException => throw ThrowableProblem(invalidCredentials, ex)
+        case ex                         => throw ThrowableProblem(internalServerError, ex)
       }
 
-  private def createAuthRequest(code: String) = {
-    new GoogleAuthorizationCodeTokenRequest(
-      new NetHttpTransport,
-      JacksonFactory.getDefaultInstance,
-      googleAuthProperties.endpoint,
-      clientSecrets.getDetails.getClientId,
-      clientSecrets.getDetails.getClientSecret,
-      code,
-      googleAuthProperties.redirectUrl
-    )
-  }
+  private def createAuthRequest(code: String) = new GoogleAuthorizationCodeTokenRequest(
+    new NetHttpTransport,
+    JacksonFactory.getDefaultInstance,
+    googleProperties.auth.endpoint,
+    clientSecrets.getDetails.getClientId,
+    clientSecrets.getDetails.getClientSecret,
+    code,
+    googleProperties.auth.redirectUrl
+  )
 
-  private def toGoogleAuthResponse(tokenResponse: GoogleTokenResponse) = {
+  private def toVerificationFeedback(tokenResponse: GoogleTokenResponse) = {
     val idToken = tokenResponse.parseIdToken
     val payload = idToken.getPayload
 
-    GoogleAuthResponse(
+    VerificationFeedback(
       id = payload.getSubject,
       email = Option(payload.getEmail),
       emailVerified = payload.getEmailVerified != null && payload.getEmailVerified,

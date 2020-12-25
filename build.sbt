@@ -1,9 +1,10 @@
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Path, Paths}
 import java.time.LocalDate
 
 import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
+
+import scala.reflect.io.Path
 
 lazy val changelogTemplatePath    = settingKey[Path]("Path to CHANGELOG.md template")
 lazy val changelogDestinationPath = settingKey[Path]("Path to CHANGELOG.md destination")
@@ -18,7 +19,8 @@ scalafmtOnCompile := false // fails on CI
 scalafixOnCompile := false // fails on CI
 
 dockerBaseImage := "adoptopenjdk/openjdk14:jre-14.0.2_12-alpine"
-dockerExposedPorts := List(8080)
+dockerExposedVolumes := Seq("/var/monorail/conf", "/var/monorail/logs")
+dockerExposedPorts := Seq(8080)
 dockerRepository := Some("docker.pkg.github.com")
 dockerUsername := Some("melalex")
 dockerAlias := DockerAlias(dockerRepository.value, dockerUsername.value, s"${name.value}/monorail-api", Some(version.value))
@@ -31,8 +33,8 @@ majorRegexes := List(ChangeLogger.BreakingChangeRegEx)
 minorRegexes := List(ChangeLogger.FeatureRegEx)
 bugfixRegexes := List(ChangeLogger.FixRegEx, ChangeLogger.RefactoringRegEx)
 
-changelogTemplatePath := Paths.get("project/CHANGELOG.md.ssp")
-changelogDestinationPath := Paths.get("target/changelog/CHANGELOG.md")
+changelogTemplatePath := Path("project/CHANGELOG.md.ssp")
+changelogDestinationPath := Path("target/changelog/CHANGELOG.md")
 
 addCompilerPlugin(scalafixSemanticdb)
 enablePlugins(JavaAppPackaging, DockerPlugin)
@@ -68,6 +70,7 @@ libraryDependencies ++= {
     "io.circe"          %% "circe-generic"        % circeVersion,
     "io.circe"          %% "circe-parser"         % circeVersion,
     "io.circe"          %% "circe-generic-extras" % circeVersion,
+    "io.circe"          %% "circe-jackson28"      % circeVersion,
     "de.heikoseeberger" %% "akka-http-circe"      % akkaJsonVersion
   )
 
@@ -117,5 +120,5 @@ changelogGenerate := {
     unreleasedCommits.value.map(_.msg)
   )
 
-  IO.write(changelogDestinationPath.value.toFile, changelog.getBytes(StandardCharsets.UTF_8))
+  IO.write(changelogDestinationPath.value.jfile, changelog.getBytes(StandardCharsets.UTF_8))
 }

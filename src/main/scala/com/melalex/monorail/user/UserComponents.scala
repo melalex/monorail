@@ -1,5 +1,20 @@
 package com.melalex.monorail.user
 
+import akka.actor.ActorSystem
+import com.melalex.monorail.user.repository.impl.FirestoreUserRepository
+import com.melalex.monorail.user.service.impl.UserServiceImpl
+import com.softwaremill.macwire.wire
+
+import scala.concurrent.ExecutionContext
+
 trait UserComponents {
 
+  def system: ActorSystem
+  def executor: ExecutionContext
+
+  // Services
+  lazy val userService: UserServiceImpl = wire[UserServiceImpl]
+
+  // Repositories
+  private[user] lazy val userRepository = wire[FirestoreUserRepository]
 }

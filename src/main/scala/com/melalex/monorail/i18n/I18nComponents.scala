@@ -6,5 +6,5 @@ import com.softwaremill.macwire.wire
 
 trait I18nComponents {
 
-  val i18nService: I18nService = wire[ResourceBundleI18nService]
+  lazy val i18nService: I18nService = wire[ResourceBundleI18nService]
 }
