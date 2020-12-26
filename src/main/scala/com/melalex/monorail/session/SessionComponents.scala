@@ -1,7 +1,8 @@
 package com.melalex.monorail.session
 
 import akka.actor.{ActorSystem, Scheduler}
-import com.melalex.monorail.session.mapper.{PersistentUserSessionMapper, RefreshTokenDataMapper}
+import com.google.cloud.firestore.Firestore
+import com.melalex.monorail.session.mapper.{DocumentSnapshotMapper, PersistentUserSessionMapper, RefreshTokenDataMapper}
 import com.melalex.monorail.session.model.UserSession
 import com.melalex.monorail.session.repository.UserSessionRepository
 import com.melalex.monorail.session.repository.impl.FirestoreUserSessionRepository
@@ -15,12 +16,14 @@ import scala.concurrent.ExecutionContext
 trait SessionComponents {
 
   implicit def system: ActorSystem
-
   implicit def executor: ExecutionContext
+
+  def firestore: Firestore
 
   private implicit lazy val scheduler: Scheduler                                     = system.scheduler
   private[session] lazy val persistentUserSessionMapper: PersistentUserSessionMapper = wire[PersistentUserSessionMapper]
   private[session] lazy val refreshTokenDataMapper: RefreshTokenDataMapper           = wire[RefreshTokenDataMapper]
+  private[session] lazy val documentSnapshotMapper: DocumentSnapshotMapper           = wire[DocumentSnapshotMapper]
   private[session] lazy val userSessionRepository: UserSessionRepository             = wire[FirestoreUserSessionRepository]
   private implicit lazy val refreshTokenStorage: RefreshTokenStorage[UserSession]    = wire[UserSessionRefreshTokenStorage]
   private implicit lazy val sessionConfig: SessionConfig                             = SessionConfig.fromConfig()

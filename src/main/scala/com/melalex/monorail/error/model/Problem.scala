@@ -1,6 +1,6 @@
 package com.melalex.monorail.error.model
 
-case class Problem(
+case class Problem private[error] (
     internalMessage: String,
     problemType: Option[String] = None,
     tittleKey: Option[String] = None,

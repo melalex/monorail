@@ -4,5 +4,6 @@ import scala.reflect.io.Path
 
 case class GoogleProperties(
     auth: GoogleAuthProperties,
-    secret: Path
+    projectId: String,
+    credentials: Path
 )

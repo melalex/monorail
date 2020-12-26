@@ -1,6 +1,7 @@
 package com.melalex.monorail.user
 
 import akka.actor.ActorSystem
+import com.google.cloud.firestore.Firestore
 import com.melalex.monorail.user.repository.impl.FirestoreUserRepository
 import com.melalex.monorail.user.service.impl.UserServiceImpl
 import com.softwaremill.macwire.wire
@@ -11,6 +12,7 @@ trait UserComponents {
 
   def system: ActorSystem
   def executor: ExecutionContext
+  def firestore: Firestore
 
   // Services
   lazy val userService: UserServiceImpl = wire[UserServiceImpl]
