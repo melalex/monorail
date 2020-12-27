@@ -5,11 +5,11 @@ import java.util.Locale
 
 case class User(
     id: String,
-    email: String,
+    email: Option[String],
     emailVerified: Boolean,
-    name: String,
-    pictureUrl: URL,
+    name: Option[String],
+    pictureUrl: Option[URL],
     locale: Locale,
-    familyName: String,
-    givenName: String
+    familyName: Option[String],
+    givenName: Option[String],
 )

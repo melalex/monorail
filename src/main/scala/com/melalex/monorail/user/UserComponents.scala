@@ -10,8 +10,9 @@ import scala.concurrent.ExecutionContext
 
 trait UserComponents {
 
-  def system: ActorSystem
-  def executor: ExecutionContext
+  implicit def system: ActorSystem
+  implicit def executor: ExecutionContext
+
   def firestore: Firestore
 
   // Services

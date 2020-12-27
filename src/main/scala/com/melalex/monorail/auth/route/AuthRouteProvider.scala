@@ -1,26 +1,25 @@
 package com.melalex.monorail.auth.route
 
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import akka.stream.Materializer
 import com.melalex.monorail.auth.dto.LoginDto
 import com.melalex.monorail.auth.model.AuthProvider
 import com.melalex.monorail.auth.service.AuthService
 import com.melalex.monorail.session.UserSessionDirectives
 import com.melalex.monorail.session.model.UserSession
+import com.melalex.monorail.user.transformer.UserTransformations
 import com.melalex.monorail.util.RouteProvider
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 import io.circe.generic.auto._
 import io.scalaland.chimney.dsl.TransformerOps
 
-import scala.concurrent.ExecutionContext
-
 class AuthRouteProvider(
     userSessionDirectives: UserSessionDirectives,
     authService: AuthService
-)(implicit executionContext: ExecutionContext, materializer: Materializer)
-    extends RouteProvider
-    with FailFastCirceSupport {
+) extends RouteProvider
+    with FailFastCirceSupport
+    with UserTransformations {
 
   import authService._
   import userSessionDirectives._
@@ -33,7 +32,7 @@ class AuthRouteProvider(
       entity(as[LoginDto]) { login =>
         onSuccess(authenticate(authProvider, login.code)) { value =>
           setUserSession(value.transformInto[UserSession]) {
-            complete(value)
+            complete(StatusCodes.OK)
           }
         }
       }

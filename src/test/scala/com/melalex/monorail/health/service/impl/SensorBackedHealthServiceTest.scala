@@ -11,12 +11,13 @@ import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 
 class SensorBackedHealthServiceTest extends BaseUnitTestSpec {
 
+  implicit val executor: ExecutionContextExecutor = ExecutionContext.global
+
   val sensor1: Sensor      = mock[Sensor]
   val sensor2: Sensor      = mock[Sensor]
   val sensor3: Sensor      = mock[Sensor]
-  val sensors: Set[Sensor] = wireSet[Sensor]
 
-  val executor: ExecutionContextExecutor = ExecutionContext.global
+  val sensors: Set[Sensor] = wireSet[Sensor]
 
   val sensorBackedHealthService: SensorBackedHealthService = wire[SensorBackedHealthService]
 

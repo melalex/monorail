@@ -39,6 +39,18 @@ changelogDestinationPath := Path("target/changelog/CHANGELOG.md")
 addCompilerPlugin(scalafixSemanticdb)
 enablePlugins(JavaAppPackaging, DockerPlugin)
 
+scalacOptions ++= List(
+  "-Xfatal-warnings",
+  "-Ymacro-annotations",
+  "-deprecation",
+  "-feature",
+  "-unchecked",
+  "-language:implicitConversions",
+  "-language:higherKinds",
+  "-language:existentials",
+  "-language:postfixOps"
+)
+
 libraryDependencies ++= {
   val akkaHttpVersion        = "10.2.0"
   val akkaVersion            = "2.6.8"

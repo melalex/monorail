@@ -3,7 +3,6 @@ package com.melalex.monorail.config
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.melalex.monorail.auth.AuthComponents
-import com.melalex.monorail.config.property.MonorailProperties
 import com.melalex.monorail.error.ErrorComponents
 import com.melalex.monorail.health.HealthComponents
 import com.melalex.monorail.i18n.I18nComponents
@@ -26,12 +25,7 @@ trait AppComponents
     compositeRouteProvider.provideRoute
   }
 
-  // Properties
-  lazy val monorailProperties: MonorailProperties = config
-    .at("monorail")
-    .loadOrThrow[MonorailProperties]
-
   // Routes
-  private[config] lazy val routeProviders         = wireSet[RouteProvider]
-  private[config] lazy val compositeRouteProvider = wire[CompositeRouteProvider]
+  private[config] lazy val routeProviders: Set[RouteProvider]             = wireSet[RouteProvider]
+  private[config] lazy val compositeRouteProvider: CompositeRouteProvider = wire[CompositeRouteProvider]
 }

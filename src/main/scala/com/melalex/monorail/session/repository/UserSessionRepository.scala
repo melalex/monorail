@@ -4,7 +4,7 @@ import com.melalex.monorail.session.model.PersistentUserSession
 
 import scala.concurrent.Future
 
-trait UserSessionRepository {
+private[session] trait UserSessionRepository {
 
   def findBySelector(selector: String): Future[Option[PersistentUserSession]]
 

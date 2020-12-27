@@ -6,12 +6,12 @@ import com.melalex.monorail.error._
 import com.melalex.monorail.error.model.ThrowableProblem
 import com.melalex.monorail.error.route.ProblemDirectives
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
+import io.circe.generic.auto._
 
 class CompositeRouteProvider(
     delegates: Set[RouteProvider],
     problemDirectives: ProblemDirectives
-) extends RouteProvider
-    with FailFastCirceSupport {
+) extends FailFastCirceSupport {
 
   import problemDirectives._
 

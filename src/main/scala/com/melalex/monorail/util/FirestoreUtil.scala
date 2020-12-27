@@ -14,7 +14,7 @@ object FirestoreUtil {
       val promise = Promise[Option[DocumentSnapshot]]()
 
       documentReference.addSnapshotListener((value: DocumentSnapshot, error: FirestoreException) => {
-        if (error != null) {
+        val _ = if (error != null) {
           promise.tryFailure(error)
         } else if (value.getData == null || !value.exists()) {
           promise.success(None)
@@ -32,7 +32,7 @@ object FirestoreUtil {
     def toFuture(implicit executionContext: ExecutionContext): Future[T] = {
       val promise = Promise[T]()
 
-      future.addListener(() => promise.complete(Try(future.get)), executionContext)
+      future.addListener(() => promise.complete(Try(future.get)), ExecutionContextExecutorServiceBridge(executionContext))
 
       promise.future
     }
